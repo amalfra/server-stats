@@ -1,0 +1,54 @@
+{
+  "name": "server-stats",
+  "version": "0.0.1",
+  "author": "Amal Francis <amalfra@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:amalfra/server-stats.git"
+  },
+  "bugs": {
+    "url": "https://github.com/amalfra/server-stats/issues"
+  },
+  "homepage": "https://github.com/amalfra/server-stats",
+  "keywords": [
+    "electron",
+    "server",
+    "stats",
+    "status",
+    "dashboard"
+  ],
+  "private": true,
+  "main": "main.js",
+  "devDependencies": {
+    "babel-loader": "^7.1.2",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "css-loader": "^0.28.5",
+    "electron": "1.7.5",
+    "electron-packager": "^8.7.2",
+    "file-loader": "^0.11.2",
+    "style-loader": "^0.18.2",
+    "url-loader": "^0.5.9",
+    "webpack": "^3.5.5"
+  },
+  "devEngines": {
+    "node": ">=5.x"
+  },
+  "dependencies": {
+    "alt": "^0.18.6",
+    "chart.js": "^2.6.0",
+    "react": "^15.6.1",
+    "react-chartjs-2": "^2.6.2",
+    "react-dom": "^15.6.1",
+    "react-router-dom": "^4.1.2",
+    "semantic-ui-css": "^2.2.12",
+    "semantic-ui-react": "^0.71.5",
+    "ssh2": "^0.5.5"
+  },
+  "scripts": {
+    "start": "ENV=development ./node_modules/.bin/electron .",
+    "compile:dev": "webpack --config webpack.config.development.js",
+    "compile:prod": "webpack --config webpack.config.production.js"
+  }
+}

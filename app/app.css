@@ -1,0 +1,20 @@
+body {
+  background: #f7f5f5;
+}
+
+body > article,
+body > article > section.login-form {
+  height: 100%;
+}
+
+.login-form .labeled.button {
+  word-break: break-all;
+}
+
+.login-form .labeled a {
+  font-weight: normal!important;
+}
+
+.login-form .labeled button {
+  white-space: nowrap;
+}
