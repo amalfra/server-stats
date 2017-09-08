@@ -18,3 +18,24 @@ body > article > section.login-form {
 .login-form .labeled button {
   white-space: nowrap;
 }
+
+#dashboard .container {
+  padding: 1em 0em;
+}
+
+#dashboard .container .segment {
+  padding-top: 2em;
+  padding-bottom: 2em;
+}
+
+.pull-right {
+  float: right!important;
+}
+
+.clearfix {
+  clear: both!important;
+}
+
+.hand-cursor:hover {
+  cursor: pointer;
+}

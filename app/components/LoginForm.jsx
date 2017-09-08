@@ -22,6 +22,7 @@ class LoginForm extends React.Component {
     this.handleInputChange = this.handleInputChange.bind(this)
     this.handleFormSubmit = this.handleFormSubmit.bind(this)
     this.handleFilepicker = this.handleFilepicker.bind(this)
+    this.pickingFile = false
   }
 
   componentDidMount() {
@@ -89,10 +90,12 @@ class LoginForm extends React.Component {
   handleFilepicker(e) {
     e.preventDefault()
     e.target.blur()
-    if (e.target.readOnly) {
+    if (e.target.readOnly || this.pickingFile) {
       return
     }
+    this.pickingFile = true
     Remote.dialog.showOpenDialog((fileNames) => {
+      this.pickingFile = false
       // fileNames is an array that contains all selected files
       if (!fileNames) {
           return
@@ -154,7 +157,7 @@ class LoginForm extends React.Component {
                     onClick={this.handleFilepicker}
                     onFocus={this.handleFilepicker}
                   >
-                    <input />
+                    <input className='hand-cursor'/>
                     <Icon name='file' />
                   </Input>
                 </Form.Field>
