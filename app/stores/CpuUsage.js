@@ -7,6 +7,7 @@ class CpuUsage {
     this.bindActions(CpuUsageActions)
 
     this.metricMemoryLimit = 5
+    this.updatedAgo = 0
     this.cpuUsageData = {
       labels: new Array(this.metricMemoryLimit).fill(''),
       datasets: []
@@ -15,6 +16,10 @@ class CpuUsage {
 
   onSetCpuUsageData(cpuUsage) {
     this.cpuUsageData = cpuUsage
+  }
+
+  onSetUpdatedAgo(updatedAgo) {
+    this.updatedAgo = updatedAgo
   }
 }
 

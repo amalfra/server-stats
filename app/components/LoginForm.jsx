@@ -1,16 +1,18 @@
 import React from 'react'
-import { Button, Form, Input, Label, Icon, Grid, Header, TextArea, Segment, Message }
-  from 'semantic-ui-react'
+import { Button, Form, Input, Label, Icon, Grid, Header, TextArea, Segment,
+  Message } from 'semantic-ui-react'
 import { remote as Remote } from 'electron'
 const fs = require('fs')
 
 import LoginFormStore from '../stores/LoginForm'
 import LoginFormAction from '../actions/LoginForm'
 
+import Utils from '../Utils'
+
 const inputValidFormats = {
-  'remoteHost': '^.+$',
-  'sshUsername': '^.+$',
-  'sshKey': '^(.|[\r\n])+$'
+  'RemoteHost': '^.+$',
+  'SshUsername': '^.+$',
+  'SshKey': '^(.|[\r\n])+$'
 }
 
 class LoginForm extends React.Component {
@@ -40,27 +42,14 @@ class LoginForm extends React.Component {
   handleInputChange(e, name, value) {
     let inputName = e ? e.target.name : name
     let inputValue = e ? e.target.value : value
+    inputName = Utils.capitalizeFirstLetter(inputName)
     // validate the field value and set dirty status
-    this.state.inputErrorStatus[inputName] = !this.validateInput(
+    let errorStatus = !this.validateInput(
       inputValue, inputValidFormats[inputName])
-    this.state.inputDirty[inputName] = true
-
-    // form is invalid if any one field's value is invalid
-    let isFormValid = true
-    for (const key of Object.keys(this.state.inputErrorStatus)) {
-      if (this.state.inputErrorStatus[key]) {
-        isFormValid = false
-        break
-      }
-    }
-    var newState = {
-      'inputDirty': this.state.inputDirty,
-      'inputErrorStatus': this.state.inputErrorStatus,
-      'isFormValid': isFormValid,
-      'connectError': null
-    }
-    newState[inputName] = inputValue
-    LoginFormAction.setStateKeys(newState)
+    LoginFormAction['set' + inputName](inputValue)
+    LoginFormAction['set' + inputName + 'Dirty'](true)
+    LoginFormAction['set' + inputName + 'ErrorStatus'](errorStatus)
+    LoginFormAction.setConnectError(null)
   }
 
   validateInput(value, format) {
@@ -70,21 +59,11 @@ class LoginForm extends React.Component {
 
   handleFormSubmit(e) {
     e.preventDefault()
-    LoginFormAction.setStateKeys({
-      connecting: true,
-      connectError: null
-    })
     LoginFormAction.connectToServer(this.state.remoteHost,
       this.state.sshUsername, fs.readFileSync(this.state.sshKey))
-    .then((connection) => {
-      this.props.onLoginSuccess(connection)
-    }, (err) => {
-      LoginFormAction.connectToServerFailed(err)
-    }).then(() => {
-      LoginFormAction.setStateKeys({
-        connecting: false
+      .then(() => {
+        this.props.onLoginSuccess()
       })
-    })
   }
 
   handleFilepicker(e) {
@@ -129,8 +108,8 @@ class LoginForm extends React.Component {
                   name='remoteHost'
                   placeholder='Remote host'
                   readOnly={this.state.connecting}
-                  error={this.state.inputDirty.remoteHost &&
-                    this.state.inputErrorStatus.remoteHost}
+                  error={this.state.remoteHostDirty &&
+                    this.state.remoteHostErrorStatus}
                   value={this.state.remoteHost}
                   onChange={this.handleInputChange}
                 />
@@ -139,8 +118,8 @@ class LoginForm extends React.Component {
                   name='sshUsername'
                   placeholder='SSH username'
                   readOnly={this.state.connecting}
-                  error={this.state.inputDirty.sshUsername &&
-                    this.state.inputErrorStatus.sshUsername}
+                  error={this.state.sshUsernameDirty &&
+                    this.state.sshUsernameErrorStatus}
                   value={this.state.sshUsername}
                   onChange={this.handleInputChange}
                 />
@@ -151,8 +130,8 @@ class LoginForm extends React.Component {
                     name='sshKey'
                     placeholder='SSH key file'
                     readOnly={this.state.connecting}
-                    error={this.state.inputDirty.sshKey &&
-                      this.state.inputErrorStatus.sshKey}
+                    error={this.state.sshKeyDirty &&
+                      this.state.sshKeyErrorStatus}
                     value={this.state.sshKey}
                     onClick={this.handleFilepicker}
                     onFocus={this.handleFilepicker}

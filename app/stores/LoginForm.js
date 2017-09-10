@@ -8,44 +8,73 @@ class LoginForm {
 
     this.connecting = false
     this.connectError = null
-
-    this.resetInputValues()
-    this.resetInputErrorStatus()
-    this.resetInputDirty()
-  }
-
-  resetInputValues() {
     this.remoteHost = ''
     this.sshUsername = ''
     this.sshKey = ''
-  }
-
-  resetInputDirty() {
-    this.inputDirty = {
-      remoteHost: false,
-      sshUsername: false,
-      sshKey: false
-    }
-  }
-
-  resetInputErrorStatus() {
     this.isFormValid = false
-    this.inputErrorStatus = {
-      remoteHost: true,
-      sshUsername: true,
-      sshKey: true
-    }
+    this.remoteHostErrorStatus = true
+    this.sshUsernameErrorStatus = true
+    this.sshKeyErrorStatus = true
+    this.remoteHostDirty = false
+    this.sshUsernameDirty = false
+    this.sshKeyDirty = false
   }
 
-  // set multiple state keys with provided values in one go
-  onSetStateKeys(keyVals) {
-    for (const key of Object.keys(keyVals)) {
-      this[key] = keyVals[key]
-    }
+  onSetIsFormValid(status) {
+    this.isFormValid = status
   }
 
-  onConnectToServerFailed(err) {
-    this.connectError = err.message
+  onSetRemoteHost(remoteHost) {
+    this.remoteHost = remoteHost
+  }
+
+  onSetSshUsername(sshUsername) {
+    this.sshUsername = sshUsername
+  }
+
+  onSetSshKey(sshKey) {
+    this.sshKey = sshKey
+  }
+
+  onSetRemoteHostDirty(status) {
+    this.remoteHostDirty = status
+  }
+
+  onSetSshUsernameDirty(status) {
+    this.sshUsernameDirty = status
+  }
+
+  onSetSshKeyDirty(status) {
+    this.sshKeyDirty = status
+  }
+
+  onSetRemoteHostErrorStatus(status) {
+    this.remoteHostErrorStatus = status
+    this.checkFormValidity()
+  }
+
+  onSetSshKeyErrorStatus(status) {
+    this.sshKeyErrorStatus = status
+    this.checkFormValidity()
+  }
+
+  onSetSshUsernameErrorStatus(status) {
+    this.sshUsernameErrorStatus = status
+    this.checkFormValidity()
+  }
+
+  checkFormValidity() {
+    // form is invalid if any one field is invalid
+    this.isFormValid = !this.remoteHostErrorStatus &&
+      !this.sshUsernameErrorStatus && !this.sshKeyErrorStatus
+  }
+
+  onSetConnectError(err) {
+    this.connectError = err
+  }
+
+  onSetConnecting(status) {
+    this.connecting = status
   }
 }
 

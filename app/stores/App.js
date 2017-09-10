@@ -5,12 +5,6 @@ import AppActions from '../actions/App'
 class App {
   constructor() {
     this.bindActions(AppActions)
-
-    this.serverConnection = null
-  }
-
-  onSetConnection(connection) {
-    this.serverConnection = connection
   }
 }
 

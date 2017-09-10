@@ -1,42 +1,30 @@
 import { Client as SSHClient } from 'ssh2'
 
-class SSHConnection {
-  constructor(host, user, key) {
+let SSHConnection = {
+  con: null,
+  establish(host, user, key) {
     this.con = new SSHClient()
-    this.host = host
-    this.user = user
-    this.key = key
-  }
-
-  establish() {
     return new Promise((resolve, reject) => {
       try {
         this.con.connect({
-          host: this.host,
+          host: host,
           port: 22,
-          username: this.user,
-          privateKey: this.key
+          username: user,
+          privateKey: key
         })
       } catch(e) {
-        // destroy precious data
-        this.key = null
         return reject(e)
       }
 
       this.con.on('error', (err) => {
-        // destroy precious data
-        this.key = null
         return reject(err)
       })
 
       this.con.on('ready', (err) => {
-        // destroy precious data
-        this.key = null
         return resolve(err)
       })
     })
-  }
-
+  },
   exec(cmd) {
     return new Promise((resolve, reject) => {
       this.con.exec(cmd, (err, stream) => {

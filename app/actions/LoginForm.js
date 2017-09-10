@@ -3,25 +3,38 @@ import alt from '../lib/alt'
 import SSHConnection from '../lib/SSHConnection'
 
 class LoginForm {
+  constructor() {
+    this.generateActions(
+      'setConnecting',
+      'setConnectError',
+      'setIsFormValid',
+      'setRemoteHost',
+      'setSshUsername',
+      'setSshKey',
+      'setRemoteHostDirty',
+      'setSshUsernameDirty',
+      'setSshKeyDirty',
+      'setRemoteHostErrorStatus',
+      'setSshKeyErrorStatus',
+      'setSshUsernameErrorStatus'
+    )
+  }
+
   connectToServer(host, user, key) {
-    let connection = new SSHConnection(host, user, key)
+    this.setConnectError(null)
+    this.setConnecting(true)
 
     return new Promise((resolve, reject) => {
-      connection.establish().then((resp) => {
-        resolve(connection)
-      }, (err) => {
-        reject(err)
-      })
+      SSHConnection.establish(host, user, key)
+        .then((resp) => {
+          return resolve(resp)
+        }, (err) => {
+          return this.setConnectError(err.message)
+        })
+        .then(() => {
+          return this.setConnecting(false)
+        })
     })
-  }
-
-  connectToServerFailed(err) {
-    return err
-  }
-
-  // set multiple state keys with values in one go
-  setStateKeys(keyVals) {
-    return keyVals
   }
 }
 

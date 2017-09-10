@@ -10,7 +10,11 @@ let Utils = {
       color += letters[Math.floor(Math.random() * 16)]
     }
     return color
-  } 
+  },
+
+  capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1)
+  }
 }
 
 export default Utils
