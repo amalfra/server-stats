@@ -7,6 +7,7 @@ class OverallMemoryUsage {
     this.bindActions(OverallMemoryUsageActions)
 
     this.metricMemoryLimit = 5
+    this.updatedAgo = 0
     this.overallMemoryUsageData = {
       labels: new Array(this.metricMemoryLimit).fill(''),
       datasets: []
@@ -15,6 +16,10 @@ class OverallMemoryUsage {
 
   onSetOverallMemoryUsageData(overallMemoryUsage) {
     this.overallMemoryUsageData = overallMemoryUsage
+  }
+
+  onSetUpdatedAgo(updatedAgo) {
+    this.updatedAgo = updatedAgo
   }
 }
 

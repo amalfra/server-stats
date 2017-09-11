@@ -1,8 +1,11 @@
 import alt from '../lib/alt'
 
 class OverallMemoryUsage {
-  setOverallMemoryUsageData(usage) {
-    return usage
+  constructor() {
+    this.generateActions(
+      'setOverallMemoryUsageData',
+      'setUpdatedAgo'
+    )
   }
 }
 

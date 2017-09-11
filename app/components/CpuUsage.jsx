@@ -2,7 +2,6 @@ import React from 'react'
 import { Line as LineChart, defaults } from 'react-chartjs-2'
 import { Label } from 'semantic-ui-react'
 
-import AppStore from '../stores/App'
 import CpuUsageStore from '../stores/CpuUsage'
 import CpuUsageActions from '../actions/CpuUsage'
 import CpuUsageSources from '../sources/CpuUsage'
@@ -12,8 +11,7 @@ import Utils from '../Utils'
 class CpuUsage extends React.Component {
   constructor() {
     super()
-    
-    this.appState = AppStore.getState()
+
     this.state = CpuUsageStore.getState()
     this.onChange = this.onChange.bind(this)
 
@@ -78,8 +76,7 @@ class CpuUsage extends React.Component {
       let end = this.metricFetchTimes.length
       this.metricFetchTimes = this.metricFetchTimes.splice(start, end)
 
-      let formattedOutput = []
-      // start calculating usage for each cpu and put result in formattedOutput
+      // start calculating usage for each cpu and put result in usages
       for (let i = 0; i < usages.length; i++) {
         let usageMetrics = usages[i].split(' ')
         // lets first convert all the data to int
