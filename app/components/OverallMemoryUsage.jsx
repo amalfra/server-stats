@@ -25,14 +25,13 @@ class OverallMemoryUsage extends React.Component {
       initialize with zero 
     */
     this.metricFetchTimes = new Array(this.state.metricMemoryLimit).fill(0)
-    this.memoryColours = {
-      'mem': Utils.getRandomColor(),
-      'swap': Utils.getRandomColor()
-    }
     this.memoryTypeLabels = {
       'mem': 'Memory',
       'swap': 'Swap'
     }
+
+    OverallMemoryUsageActions.setMemMemoryColour(Utils.getRandomColour())
+    OverallMemoryUsageActions.setSwapMemoryColour(Utils.getRandomColour())
   }
 
   componentDidMount() {
@@ -82,6 +81,15 @@ class OverallMemoryUsage extends React.Component {
       let end = this.metricFetchTimes.length
       this.metricFetchTimes = this.metricFetchTimes.splice(start, end)
 
+      OverallMemoryUsageActions.setMemoryTotal(usages.mem.total)
+      OverallMemoryUsageActions.setMemoryAvailable(usages.mem.available)
+      OverallMemoryUsageActions.setMemoryUsed(usages.mem.used)
+      OverallMemoryUsageActions.setMemoryFree(usages.mem.free)
+      OverallMemoryUsageActions.setMemoryBuffcache(usages.mem.buffcache)
+      OverallMemoryUsageActions.setSwapTotal(usages.swap.total)
+      OverallMemoryUsageActions.setSwapUsed(usages.swap.used)
+      OverallMemoryUsageActions.setSwapFree(usages.swap.free)
+
       // start calculating usage for each memory type and put result in usages
       let usage_percentage = (1 - usages.mem.available/usages.mem.total) * 100
       usages.mem = usage_percentage.toFixed(2)
@@ -124,7 +132,7 @@ class OverallMemoryUsage extends React.Component {
         showLine: true,
         lineTension: 0.1,
         borderCapStyle: 'butt',
-        borderColor: this.memoryColours[memType],
+        borderColor: this.state.memoryColours[memType],
         data: []
       }
       let previousDataset = this.state.overallMemoryUsageData.datasets[i]    

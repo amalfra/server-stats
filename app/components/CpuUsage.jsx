@@ -130,7 +130,7 @@ class CpuUsage extends React.Component {
     for (let cpuNumber = 0; cpuNumber < usages.length; cpuNumber++) {
       // assign a colour to this cpu if its not yet done
       if (!this.cpuColours[cpuNumber]) {
-        this.cpuColours[cpuNumber] = Utils.getRandomColor()
+        this.cpuColours[cpuNumber] = Utils.getRandomColour()
       }
 
       let datasetTemplate = {

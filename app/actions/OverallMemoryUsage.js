@@ -4,7 +4,17 @@ class OverallMemoryUsage {
   constructor() {
     this.generateActions(
       'setOverallMemoryUsageData',
-      'setUpdatedAgo'
+      'setUpdatedAgo',
+      'setMemoryTotal',
+      'setMemoryAvailable',
+      'setMemoryUsed',
+      'setMemoryFree',
+      'setMemoryBuffcache',
+      'setSwapTotal',
+      'setSwapUsed',
+      'setSwapFree',
+      'setMemMemoryColour',
+      'setSwapMemoryColour'
     )
   }
 }
