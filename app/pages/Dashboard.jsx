@@ -4,6 +4,7 @@ import { Grid, Segment, Header, Icon } from 'semantic-ui-react'
 import CpuUsageComponent from '../components/CpuUsage'
 import OverallMemoryUsageComponent from '../components/OverallMemoryUsage'
 import MemoryUsageComponent from '../components/MemoryUsage'
+import SwapUsageComponent from '../components/SwapUsage'
 
 class Dashboard extends React.Component {
   constructor() {
@@ -51,6 +52,7 @@ class Dashboard extends React.Component {
                     <Icon name='server' /> Swap
                   </Header>
                   <Segment attached>
+                    <SwapUsageComponent />
                   </Segment>
                 </Grid.Column>
               </Grid.Row>

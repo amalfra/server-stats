@@ -5,7 +5,7 @@ import OverallMemoryUsageStore from '../stores/OverallMemoryUsage'
 
 import Utils from '../Utils'
 
-class MemoryUsage extends React.Component {
+class SwapUsage extends React.Component {
   constructor(props) {
     super(props)
 
@@ -27,14 +27,14 @@ class MemoryUsage extends React.Component {
 
   render() {
     return(
-      <article id='memory-usage'>
-        { this.state.memoryTotal > 0 ?
-          <Progress percent={(this.state.memoryUsed/this.state.memoryTotal)
+      <article id='swap-usage'>
+        { this.state.swapTotal > 0 ?
+          <Progress percent={(this.state.swapUsed/this.state.swapTotal)
             .toFixed(2) * 100}
-            color={this.state.memoryColours.mem}>
-            {(this.state.memoryUsed/this.state.memoryTotal).toFixed(2) * 100}%
+            color={this.state.memoryColours.swap}>
+            {(this.state.swapUsed/this.state.swapTotal).toFixed(2) * 100}%
           </Progress> :
-          <Progress percent={0} color={this.state.memoryColours.mem}>
+          <Progress percent={0} color={this.state.memoryColours.swap}>
             0%
           </Progress>
         }
@@ -49,4 +49,4 @@ class MemoryUsage extends React.Component {
   }
 }
 
-export default MemoryUsage
+export default SwapUsage
