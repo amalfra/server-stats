@@ -38,12 +38,6 @@ class SwapUsage extends React.Component {
             0%
           </Progress>
         }
-        <Label className='pull-right'>
-          Last updated: { this.state.updatedAgo ?
-            this.state.updatedAgo + ' seconds ago' : 'not yet'
-          }
-        </Label>
-        <br className='clearfix' />
       </article>
     )
   }

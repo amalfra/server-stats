@@ -1,10 +1,13 @@
 import React from 'react'
 import { Line as LineChart, defaults } from 'react-chartjs-2'
-import { Label } from 'semantic-ui-react'
+import { Label, Grid, Header } from 'semantic-ui-react'
 
 import OverallMemoryUsageStore from '../stores/OverallMemoryUsage'
 import OverallMemoryUsageActions from '../actions/OverallMemoryUsage'
 import OverallMemoryUsageSources from '../sources/OverallMemoryUsage'
+
+import MemoryUsageComponent from '../components/MemoryUsage'
+import SwapUsageComponent from '../components/SwapUsage'
 
 import Utils from '../Utils'
 
@@ -172,9 +175,33 @@ class OverallMemoryUsage extends React.Component {
 
     return(
       <article id='overall-memory-usage'>
-        <LineChart data={this.state.overallMemoryUsageData}
-          options={chartOptions} />
-        <br />
+        <Grid container>
+          <Grid.Row>
+            <Grid.Column width={12}>
+              <LineChart data={this.state.overallMemoryUsageData}
+                options={chartOptions} />
+            </Grid.Column>
+            <Grid.Column width={4}>
+              <Grid.Row>
+                <Grid.Column>
+                  <Header as='h4'>
+                    Memory
+                  </Header>
+                  <MemoryUsageComponent />
+                </Grid.Column>
+              </Grid.Row>
+              <br /><br />
+              <Grid.Row>
+                <Grid.Column>
+                  <Header as='h4'>
+                    Swap
+                  </Header>
+                  <SwapUsageComponent />
+                </Grid.Column>
+              </Grid.Row>
+            </Grid.Column>
+          </Grid.Row>
+        </Grid>
         <Label className='pull-right'>
           Last updated: { this.state.updatedAgo ?
             this.state.updatedAgo + ' seconds ago' : 'not yet'
