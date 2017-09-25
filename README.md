@@ -7,6 +7,8 @@ A desktop app to view linux server resource usage using SSH. Available for:
 * OSX
 * Windows
 
+![demo](https://raw.githubusercontent.com/amalfra/server-stats/master/.images/demo.gif)
+
 ## Development
 
 Questions, problems or suggestions? Please post them on the [issue tracker](https://github.com/amalfra/server-stats/issues).
