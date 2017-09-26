@@ -3,6 +3,8 @@ import { withRouter } from 'react-router-dom'
 
 import LoginFormComponent from '../components/LoginForm'
 
+import AppActions from '../actions/App'
+
 class Login extends React.Component {
   constructor() {
     super()
@@ -11,6 +13,7 @@ class Login extends React.Component {
   }
 
   loginSucessCallback(connection) {
+    AppActions.setIsAuthenticated(true)
     this.props.history.push('/dashboard')
   }
 

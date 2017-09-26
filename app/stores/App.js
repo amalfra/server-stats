@@ -5,6 +5,12 @@ import AppActions from '../actions/App'
 class App {
   constructor() {
     this.bindActions(AppActions)
+
+    this.isAuthenticated = false
+  }
+
+  onSetIsAuthenticated(isAuthenticated) {
+    this.isAuthenticated = isAuthenticated
   }
 }
 
