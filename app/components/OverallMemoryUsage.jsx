@@ -1,6 +1,6 @@
 import React from 'react'
 import { Line as LineChart, defaults } from 'react-chartjs-2'
-import { Label, Grid, Header } from 'semantic-ui-react'
+import { Label, Grid, Header, Divider } from 'semantic-ui-react'
 
 import OverallMemoryUsageStore from '../stores/OverallMemoryUsage'
 import OverallMemoryUsageActions from '../actions/OverallMemoryUsage'
@@ -190,7 +190,13 @@ class OverallMemoryUsage extends React.Component {
                   <MemoryUsageComponent />
                 </Grid.Column>
               </Grid.Row>
-              <br /><br />
+              <Grid.Row>
+                <Grid.Column>
+                  <br /><br />
+                  <Divider />
+                  <br />
+                </Grid.Column>
+              </Grid.Row>
               <Grid.Row>
                 <Grid.Column>
                   <Header as='h4'>

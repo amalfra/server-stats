@@ -31,11 +31,13 @@ class SwapUsage extends React.Component {
         { this.state.swapTotal > 0 ?
           <Progress percent={(this.state.swapUsed/this.state.swapTotal)
             .toFixed(2) * 100}
-            color={this.state.memoryColours.swap}>
-            {(this.state.swapUsed/this.state.swapTotal).toFixed(2) * 100}%
+            color={this.state.memoryColours.swap} size='small'>
+            {(this.state.swapUsed/this.state.swapTotal).toFixed(2) * 100}%<br />
+            {Utils.humanMemorySize(this.state.swapUsed)}&nbsp;of&nbsp;{Utils.humanMemorySize(this.state.swapTotal)}
           </Progress> :
-          <Progress percent={0} color={this.state.memoryColours.swap}>
-            0%
+          <Progress percent={0} color={this.state.memoryColours.swap}
+            size='small'>
+            0%<br />0MB of 0MB
           </Progress>
         }
       </article>

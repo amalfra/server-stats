@@ -11,6 +11,16 @@ let Utils = {
 
   capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1)
+  },
+
+  humanMemorySize(size) {
+    let units = ['B', 'kB', 'MB', 'GB', 'TB']
+    if (size === 0) {
+      return '0 ' + units[0]
+    }
+
+    let i = Math.floor(Math.log(size)/Math.log(1024))
+    return (size/Math.pow(1024, i)).toFixed(2) * 1 + ' ' + units[i]
   }
 }
 

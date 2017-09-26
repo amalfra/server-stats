@@ -31,11 +31,13 @@ class MemoryUsage extends React.Component {
         { this.state.memoryTotal > 0 ?
           <Progress percent={(this.state.memoryUsed/this.state.memoryTotal)
             .toFixed(2) * 100}
-            color={this.state.memoryColours.mem}>
+            color={this.state.memoryColours.mem} size='small'>
             {(this.state.memoryUsed/this.state.memoryTotal).toFixed(2) * 100}%
+            <br />{Utils.humanMemorySize(this.state.memoryUsed)}&nbsp;of&nbsp;{Utils.humanMemorySize(this.state.memoryTotal)}
           </Progress> :
-          <Progress percent={0} color={this.state.memoryColours.mem}>
-            0%
+          <Progress percent={0} color={this.state.memoryColours.mem}
+            size='small'>
+            0%<br />0MB of 0MB
           </Progress>
         }
       </article>
