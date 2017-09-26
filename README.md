@@ -15,6 +15,9 @@ You can download the latest release [here](https://github.com/amalfra/server-sta
 
 Install and connect to your server with SSH credentials through login screen.
 
+## Thanks to
+* Icons made by [Freepik](http://www.freepik.com) from [www.flaticon.com](https://www.flaticon.com) is licensed by [Creative Commons BY 3.0](http://creativecommons.org/licenses/by/3.0/)
+
 ## Development
 
 Questions, problems or suggestions? Please post them on the [issue tracker](https://github.com/amalfra/server-stats/issues).

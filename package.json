@@ -2,6 +2,7 @@
   "name": "server-stats",
   "version": "0.0.1",
   "author": "Amal Francis <amalfra@gmail.com>",
+  "description": "A desktop application to view Linux server stats using SSH",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -29,6 +30,8 @@
     "chai-as-promised": "^7.1.1",
     "css-loader": "^0.28.5",
     "electron": "1.7.5",
+    "electron-installer-debian": "^0.5.2",
+    "electron-installer-redhat": "^0.5.0",
     "electron-packager": "^8.7.2",
     "file-loader": "^0.11.2",
     "mocha": "^3.5.3",
@@ -57,6 +60,10 @@
     "compile:prod": "webpack --config webpack.config.production.js",
     "mocha": "mocha --compilers js:babel-core/register",
     "test": "npm run mocha -- './app/__tests__/*.js'",
-    "test:e2e": "./node_modules/mocha/bin/mocha __tests__/index.js"
+    "test:e2e": "./node_modules/mocha/bin/mocha __tests__/index.js",
+    "install-build-req": "sudo apt-get install -y rpm",
+    "build:linux": "npm run install-build-req && electron-packager . server-stats icon=resources/Icon.png --overwrite --prune=true --platform=linux --arch=x64 --out=release && npm run package:deb64 && npm run package:rpm64",
+    "package:deb64": "electron-installer-debian --arch=amd64 --config=dist-package.config.json",
+    "package:rpm64": "electron-installer-redhat --arch=x86_64 --config=dist-package.config.json"
   }
 }

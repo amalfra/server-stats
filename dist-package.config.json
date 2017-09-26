@@ -1,0 +1,12 @@
+{
+  "src": "release/server-stats-linux-x64",
+  "dest": "release",
+  "icon": "resources/Icon.png",
+  "categories": [
+    "Utility"
+  ],
+  "options": {
+    "productName": "Server Stats",
+    "description": "View your Linux server stats using SSH"
+  }
+}
