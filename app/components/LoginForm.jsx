@@ -63,7 +63,7 @@ class LoginForm extends React.Component {
       this.state.sshUsername, fs.readFileSync(this.state.sshKey))
       .then(() => {
         this.props.onLoginSuccess()
-      })
+      }, () => {})
   }
 
   handleFilepicker(e) {

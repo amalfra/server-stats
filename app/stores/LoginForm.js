@@ -20,10 +20,6 @@ class LoginForm {
     this.sshKeyDirty = false
   }
 
-  onSetIsFormValid(status) {
-    this.isFormValid = status
-  }
-
   onSetRemoteHost(remoteHost) {
     this.remoteHost = remoteHost
   }

@@ -59,7 +59,7 @@
     "compile:dev": "webpack --config webpack.config.development.js",
     "compile:prod": "webpack --config webpack.config.production.js",
     "mocha": "mocha --compilers js:babel-core/register",
-    "test": "npm run mocha -- './app/__tests__/*.js'",
+    "test": "npm run mocha -- './app/**/__tests__/*.js'",
     "test:e2e": "./node_modules/mocha/bin/mocha __tests__/index.js",
     "install-build-req": "sudo apt-get install -y rpm",
     "build:linux": "npm run install-build-req && electron-packager . server-stats icon=resources/Icon.png --overwrite --prune=true --platform=linux --arch=x64 --out=release && npm run package:deb64 && npm run package:rpm64",

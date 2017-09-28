@@ -7,7 +7,6 @@ class LoginForm {
     this.generateActions(
       'setConnecting',
       'setConnectError',
-      'setIsFormValid',
       'setRemoteHost',
       'setSshUsername',
       'setSshKey',
@@ -29,7 +28,8 @@ class LoginForm {
         .then((resp) => {
           return resolve(resp)
         }, (err) => {
-          return this.setConnectError(err.message)
+          this.setConnectError(err.message)
+          return reject()
         })
         .then(() => {
           return this.setConnecting(false)
