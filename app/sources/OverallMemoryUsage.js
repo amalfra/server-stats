@@ -62,10 +62,9 @@ let OverallMemoryUsage = {
           let oldFormat = false
           // its old format, remove '-/+ buffers/cache' metric which we don't need
           if (memoryUsages.length > 2) {
-            memoryUsages = memoryUsages.splice(1, 1)
+            memoryUsages.splice(1, 1)
             oldFormat = true
           }
-
           for (let i = 0; i < memoryUsages.length; i++) {
             memoryUsages[i] = memoryUsages[i].replace(/ +/g, ' ')
             let memoryUsageParts = memoryUsages[i].split(' ')
