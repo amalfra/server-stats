@@ -31,8 +31,10 @@
     "css-loader": "^0.28.5",
     "electron": "1.7.5",
     "electron-installer-debian": "^0.5.2",
+    "electron-installer-dmg": "^0.2.1",
     "electron-installer-redhat": "^0.5.0",
     "electron-packager": "^8.7.2",
+    "enzyme": "^3.1.0",
     "file-loader": "^0.11.2",
     "mocha": "^3.5.3",
     "sinon": "^4.0.1",
@@ -65,6 +67,9 @@
     "install-build-req": "sudo apt-get install -y rpm",
     "build:linux": "npm run install-build-req && electron-packager . server-stats icon=resources/Icon.png --overwrite --prune=true --platform=linux --arch=x64 --out=release && npm run package:deb64 && npm run package:rpm64",
     "package:deb64": "electron-installer-debian --arch=amd64 --config=dist-package.config.json",
-    "package:rpm64": "electron-installer-redhat --arch=x86_64 --config=dist-package.config.json"
+    "package:rpm64": "electron-installer-redhat --arch=x86_64 --config=dist-package.config.json",
+    "build:osx": "electron-packager . server-stats icon=resources/Icon.png --overwrite --prune=true --platform=darwin --arch=x64 --out=release && npm run package:dmg",
+    "package:dmg": "electron-installer-dmg --out=release --icon=resources/Icon.png --overwrite release/server-stats-darwin-x64 server-stats",
+    "build:win": "electron-packager . server-stats icon=resources/Icon.png --overwrite --prune=true --platform=win32 --arch=x64 --out=release"    
   }
 }
