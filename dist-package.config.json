@@ -1,7 +1,7 @@
 {
   "src": "release/server-stats-linux-x64",
   "dest": "release",
-  "icon": "resources/Icon.png",
+  "icon": "resources/icon.png",
   "categories": [
     "Utility"
   ],
