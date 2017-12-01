@@ -1,5 +1,6 @@
 Server Stats
 ========
+[![GitHub release](https://img.shields.io/github/release/amalfra/server-stats.svg)](https://github.com/amalfra/server-stats/releases)
 [![Build Status](https://travis-ci.org/amalfra/server-stats.svg?branch=master)](https://travis-ci.org/amalfra/server-stats)
 
 A desktop app to view linux server resource usage using SSH. Available for:
