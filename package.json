@@ -70,6 +70,6 @@
     "package:rpm64": "electron-installer-redhat --arch=x86_64 --config=dist-package.config.json",
     "build:osx": "electron-packager . server-stats icon=resources/icon.icns --overwrite --prune=true --platform=darwin --arch=x64 --out=release && npm run package:dmg",
     "package:dmg": "electron-installer-dmg --out=release --icon=resources/icon.icns --overwrite release/server-stats-darwin-x64 server-stats",
-    "build:win": "electron-packager . server-stats icon=resources/icon.png --overwrite --prune=true --platform=win32 --arch=x64 --out=release"    
+    "build:win": "electron-packager . server-stats icon=resources/icon.png --overwrite --prune=true --platform=win32 --arch=x64 --out=release"
   }
 }
