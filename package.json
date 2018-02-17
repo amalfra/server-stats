@@ -99,8 +99,8 @@
     "compile:dev": "webpack --config webpack.config.development.js",
     "compile:prod": "webpack --config webpack.config.production.js",
     "mocha": "mocha --compilers js:babel-core/register",
-    "test": "npm run mocha -- './app/**/__tests__/*.js'",
-    "test:e2e": "./node_modules/mocha/bin/mocha __tests__/index.js",
+    "test": "npm run compile:dev && npm run mocha -- './app/**/__tests__/*.js'",
+    "test:e2e": "npm run compile:dev && ./node_modules/mocha/bin/mocha __tests__/index.js",
     "build:linux": "npm run compile:prod && electron-builder --linux --x64",
     "build:osx": "npm run compile:prod && electron-builder --mac --x64",
     "build:win": "npm run compile:prod && electron-builder --win --x64"
