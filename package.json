@@ -1,6 +1,6 @@
 {
   "name": "server-stats",
-  "version": "0.5.0",
+  "version": "1.0.0",
   "author": "Amal Francis <amalfra@gmail.com>",
   "description": "A desktop application to view Linux server stats using SSH",
   "license": "MIT",
@@ -52,7 +52,12 @@
     "directories": {
       "buildResources": "resources"
     },
-    "publish": null
+    "publish": null,
+    "files": [
+      "build/*",
+      "resources/*",
+      "main.js"
+    ]
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
@@ -61,6 +66,7 @@
     "babel-preset-react": "^6.24.1",
     "chai": "^4.1.2",
     "chai-as-promised": "^7.1.1",
+    "copy-webpack-plugin": "^4.4.1",
     "css-loader": "^0.28.9",
     "electron": "^1.8.2",
     "electron-builder": "^20.0.5",
@@ -88,8 +94,8 @@
     "ssh2": "^0.5.5"
   },
   "scripts": {
-    "start": "ENV=development ./node_modules/.bin/electron .",
-    "start:win": "set ENV=development && .\\node_modules\\.bin\\electron .",
+    "start": "npm run compile:dev && ENV=development ./node_modules/.bin/electron .",
+    "start:win": "npm run compile:dev && set ENV=development && .\\node_modules\\.bin\\electron .",
     "compile:dev": "webpack --config webpack.config.development.js",
     "compile:prod": "webpack --config webpack.config.production.js",
     "mocha": "mocha --compilers js:babel-core/register",

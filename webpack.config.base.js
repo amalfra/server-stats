@@ -1,3 +1,5 @@
+var CopyWebpackPlugin = require('copy-webpack-plugin');
+
 var config = {
   entry: [
     './app/index',
@@ -18,8 +20,13 @@ var config = {
       loader: 'url-loader'
     }]
   },
+  plugins: [
+    new CopyWebpackPlugin([
+      {from: 'app/index.html', to: 'index.html'}
+    ])
+  ],
   output: {
-    path: __dirname + '/dist',
+    path: __dirname + '/build',
     filename: 'bundle.js'
   },
   resolve: {
