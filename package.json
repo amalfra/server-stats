@@ -4,6 +4,9 @@
   "author": "Amal Francis <amalfra@gmail.com>",
   "description": "A desktop application to view Linux server stats using SSH",
   "license": "MIT",
+  "engines": {
+    "node": ">=10.12.0"
+  },
   "repository": {
     "type": "git",
     "url": "git@github.com:amalfra/server-stats.git"
@@ -60,38 +63,35 @@
     ]
   },
   "devDependencies": {
-    "babel-core": "^6.26.0",
-    "babel-loader": "^7.1.2",
-    "babel-preset-es2015": "^6.24.1",
-    "babel-preset-react": "^6.24.1",
-    "chai": "^4.1.2",
+    "@babel/core": "^7.11.1",
+    "@babel/preset-env": "^7.11.0",
+    "@babel/preset-react": "^7.10.4",
+    "babel-loader": "^8.1.0",
+    "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
-    "copy-webpack-plugin": "^4.4.1",
-    "css-loader": "^0.28.9",
-    "electron": "^7.2.4",
-    "electron-builder": "^20.0.5",
-    "enzyme": "^3.3.0",
-    "file-loader": "^0.11.2",
-    "mocha": "^3.5.3",
-    "sinon": "^4.3.0",
-    "spectron": "^3.8.0",
-    "style-loader": "^0.18.2",
-    "url-loader": "^0.5.9",
-    "webpack": "^3.11.0"
-  },
-  "devEngines": {
-    "node": ">=8.x"
+    "copy-webpack-plugin": "^6.0.3",
+    "css-loader": "^4.2.1",
+    "electron": "^9.2.0",
+    "electron-builder": "^22.8.0",
+    "enzyme": "^3.11.0",
+    "file-loader": "^6.0.0",
+    "mocha": "^8.1.1",
+    "sinon": "^9.0.3",
+    "spectron": "^11.1.0",
+    "style-loader": "^1.2.1",
+    "url-loader": "^4.1.0",
+    "webpack": "^4.44.1"
   },
   "dependencies": {
     "alt": "^0.18.6",
-    "chart.js": "^2.6.0",
-    "react": "^15.6.1",
-    "react-chartjs-2": "^2.7.0",
-    "react-dom": "^15.6.1",
-    "react-router-dom": "^4.1.2",
-    "semantic-ui-css": "^2.2.14",
-    "semantic-ui-react": "^0.71.5",
-    "ssh2": "^0.5.5"
+    "chart.js": "^2.9.3",
+    "react": "^16.13.1",
+    "react-chartjs-2": "^2.10.0",
+    "react-dom": "^16.13.1",
+    "react-router-dom": "^5.2.0",
+    "semantic-ui-css": "^2.4.1",
+    "semantic-ui-react": "^1.2.0",
+    "ssh2": "^0.8.9"
   },
   "scripts": {
     "start": "npm run compile:dev && ENV=development ./node_modules/.bin/electron .",
