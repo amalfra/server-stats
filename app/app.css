@@ -2,8 +2,8 @@ body {
   background: #f7f5f5;
 }
 
-body > article,
-body > article > section.login-form {
+body #app,
+body #app > section.login-form {
   height: 100%;
 }
 
