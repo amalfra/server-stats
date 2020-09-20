@@ -1,5 +1,5 @@
 var config = require('./webpack.config.base');
 
-config.target = 'electron';
+config.mode = 'development';
 
 module.exports = config;

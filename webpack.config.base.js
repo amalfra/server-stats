@@ -1,11 +1,12 @@
 var CopyWebpackPlugin = require('copy-webpack-plugin');
 
 var config = {
+  target: 'electron-main',
   entry: [
     './app/index',
   ],
   module: {
-    loaders: [{
+    rules: [{
       test: /\.jsx?$/,
       loader: 'babel-loader',
       exclude: /node_modules/
@@ -21,9 +22,11 @@ var config = {
     }]
   },
   plugins: [
-    new CopyWebpackPlugin([
-      {from: 'app/index.html', to: 'index.html'}
-    ])
+    new CopyWebpackPlugin({
+      patterns: [
+        { from: 'app/index.html', to: 'index.html' },
+      ],
+    }),
   ],
   output: {
     path: __dirname + '/build',
