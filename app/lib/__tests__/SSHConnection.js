@@ -1,4 +1,4 @@
-import chai, { assert } from 'chai';
+import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 
 import SSHConnection from '../SSHConnection';

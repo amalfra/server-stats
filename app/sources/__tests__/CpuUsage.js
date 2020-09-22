@@ -1,4 +1,4 @@
-import { assert, expect } from 'chai';
+import { expect } from 'chai';
 import { stub } from 'sinon';
 
 import CpuUsageSource from '../CpuUsage';

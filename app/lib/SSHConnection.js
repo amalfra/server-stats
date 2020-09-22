@@ -19,6 +19,8 @@ const SSHConnection = {
       this.con.on('error', (err) => reject(err));
 
       this.con.on('ready', (err) => resolve(err));
+
+      return null;
     });
   },
   exec(cmd) {
@@ -31,7 +33,8 @@ const SSHConnection = {
         // capture stdOut, stdErr and resolve when stream closed
         let cmdStdout = '';
         let cmdStdErr = '';
-        stream.on('close', (code, signal) => {
+
+        return stream.on('close', (code) => {
           cmdStdErr = cmdStdErr.trim();
           cmdStdout = cmdStdout.trim();
           if (cmdStdErr.length > 0) return reject(cmdStdErr, code);

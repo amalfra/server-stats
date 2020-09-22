@@ -2,9 +2,7 @@ import alt from '../lib/alt';
 
 class App {
   constructor() {
-    this.generateActions(
-      'setIsAuthenticated',
-    );
+    this.generateActions('setIsAuthenticated');
   }
 }
 

@@ -1,5 +1,5 @@
 exports.run = (app) => {
-  describe('Test app window', function () {
+  describe('Test app window', () => {
     this.timeout(15000);
 
     beforeEach(() => app.start());

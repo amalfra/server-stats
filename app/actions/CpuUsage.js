@@ -2,10 +2,7 @@ import alt from '../lib/alt';
 
 class CpuUsage {
   constructor() {
-    this.generateActions(
-      'setCpuUsageData',
-      'setUpdatedAgo',
-    );
+    this.generateActions('setCpuUsageData', 'setUpdatedAgo');
   }
 }
 

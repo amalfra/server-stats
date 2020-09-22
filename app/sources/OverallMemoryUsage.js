@@ -64,7 +64,7 @@ const OverallMemoryUsage = {
             memoryUsages.splice(1, 1);
             oldFormat = true;
           }
-          for (let i = 0; i < memoryUsages.length; i++) {
+          for (let i = 0; i < memoryUsages.length; i += 1) {
             memoryUsages[i] = memoryUsages[i].replace(/ +/g, ' ');
             const memoryUsageParts = memoryUsages[i].split(' ');
             memoryUsageParts[0] = memoryUsageParts[0].replace(':', '').toLowerCase();
@@ -72,20 +72,24 @@ const OverallMemoryUsage = {
 
             if (memoryUsageParts[0] === 'swap') {
               readings = {
-                total: parseInt(memoryUsageParts[1]),
-                used: parseInt(memoryUsageParts[2]),
-                free: parseInt(memoryUsageParts[3]),
+                total: parseInt(memoryUsageParts[1], 10),
+                used: parseInt(memoryUsageParts[2], 10),
+                free: parseInt(memoryUsageParts[3], 10),
               };
             } else if (memoryUsageParts[0] === 'mem') {
-              let buffcache = 0; let available = 0; let used = 0; const free = parseInt(memoryUsageParts[3]); const
-                total = parseInt(memoryUsageParts[1]);
+              let buffcache = 0;
+              let available = 0;
+              let used = 0;
+              const free = parseInt(memoryUsageParts[3], 10);
+              const total = parseInt(memoryUsageParts[1], 10);
+
               if (oldFormat) {
-                buffcache = parseInt(memoryUsageParts[5])
-                  + parseInt(memoryUsageParts[6]);
+                buffcache = parseInt(memoryUsageParts[5], 10)
+                  + parseInt(memoryUsageParts[6], 10);
                 available = free + buffcache;
               } else {
-                buffcache = parseInt(memoryUsageParts[5]);
-                available = parseInt(memoryUsageParts[6]);
+                buffcache = parseInt(memoryUsageParts[5], 10);
+                available = parseInt(memoryUsageParts[6], 10);
               }
               used = total - free - buffcache;
               readings = {
@@ -100,7 +104,7 @@ const OverallMemoryUsage = {
             formattedOutput[memoryUsageParts[0]] = readings;
           }
           return resolve(formattedOutput);
-        }, (cmdStderr, code) => reject(cmdStderr));
+        }, (cmdStderr) => reject(cmdStderr));
     });
   },
 };

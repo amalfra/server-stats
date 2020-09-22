@@ -32,7 +32,7 @@ const CpuUsage = {
           // first line combined metrics of all cpus which we are not interested in
           cpuUsages.shift();
           return resolve(cpuUsages);
-        }, (cmdStderr, code) => reject(cmdStderr));
+        }, (cmdStderr) => reject(cmdStderr));
     });
   },
 };

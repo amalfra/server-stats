@@ -3,7 +3,7 @@ const path = require('path');
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 
-const main_test = require('./main');
+const mainTest = require('./main');
 
 let electronPath = path.join(__dirname, '..', 'node_modules', '.bin',
   'electron');
@@ -21,4 +21,4 @@ global.before(() => {
   chai.use(chaiAsPromised);
 });
 
-main_test.run(app);
+mainTest.run(app);

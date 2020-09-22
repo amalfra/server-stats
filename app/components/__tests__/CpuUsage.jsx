@@ -3,6 +3,8 @@ import { shallow } from 'enzyme';
 import { expect, assert } from 'chai';
 import { stub } from 'sinon';
 
+import CpuUsage from '../CpuUsage';
+
 // Let's create our mocked version of the libraries
 const Meteor = {
   loginWithPassword: null,
@@ -12,6 +14,13 @@ const Router = {
     dashboard: null,
   },
 };
+
+function clickOnLoginBtn(credentials) {
+  const wrapper = shallow(<CpuUsage />);
+
+  wrapper.setState(credentials);
+  wrapper.find('TouchableHighlight').prop('onPress')();
+}
 
 describe('<CpuUsage />', () => {
   const credentials = {
@@ -50,10 +59,3 @@ describe('<CpuUsage />', () => {
     expect(Router.Actions.dashboard.calledOnce).to.be.false;
   });
 });
-
-function clickOnLoginBtn(credentials) {
-  const wrapper = shallow(<CpuUsage />);
-
-  wrapper.setState(credentials);
-  wrapper.find('TouchableHighlight').prop('onPress')();
-}

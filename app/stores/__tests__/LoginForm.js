@@ -100,9 +100,11 @@ describe('LoginFormStore', () => {
     let data = false; let
       action = LoginFormActions.SET_SSH_USERNAME_ERROR_STATUS;
     alt.dispatcher.dispatch({ action, data });
-    data = false, action = LoginFormActions.SET_SSH_KEY_ERROR_STATUS;
+    data = false;
+    action = LoginFormActions.SET_SSH_KEY_ERROR_STATUS;
     alt.dispatcher.dispatch({ action, data });
-    data = false, action = LoginFormActions.SET_REMOTE_HOST_ERROR_STATUS;
+    data = false;
+    action = LoginFormActions.SET_REMOTE_HOST_ERROR_STATUS;
     alt.dispatcher.dispatch({ action, data });
 
     assert.equal(LoginFormStore.getState().isFormValid, true);
