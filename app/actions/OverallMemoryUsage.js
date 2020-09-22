@@ -1,4 +1,4 @@
-import alt from '../lib/alt'
+import alt from '../lib/alt';
 
 class OverallMemoryUsage {
   constructor() {
@@ -14,9 +14,9 @@ class OverallMemoryUsage {
       'setSwapUsed',
       'setSwapFree',
       'setMemMemoryColour',
-      'setSwapMemoryColour'
-    )
+      'setSwapMemoryColour',
+    );
   }
 }
 
-export default alt.createActions(OverallMemoryUsage)
+export default alt.createActions(OverallMemoryUsage);

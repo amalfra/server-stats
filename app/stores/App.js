@@ -1,17 +1,17 @@
-import alt from '../lib/alt'
+import alt from '../lib/alt';
 
-import AppActions from '../actions/App'
+import AppActions from '../actions/App';
 
 class App {
   constructor() {
-    this.bindActions(AppActions)
+    this.bindActions(AppActions);
 
-    this.isAuthenticated = false
+    this.isAuthenticated = false;
   }
 
   onSetIsAuthenticated(isAuthenticated) {
-    this.isAuthenticated = isAuthenticated
+    this.isAuthenticated = isAuthenticated;
   }
 }
 
-export default alt.createStore(App, 'App')
+export default alt.createStore(App, 'App');

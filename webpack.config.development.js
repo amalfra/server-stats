@@ -1,4 +1,4 @@
-var config = require('./webpack.config.base');
+const config = require('./webpack.config.base');
 
 config.mode = 'development';
 

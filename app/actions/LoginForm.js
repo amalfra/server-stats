@@ -1,6 +1,6 @@
-import alt from '../lib/alt'
+import alt from '../lib/alt';
 
-import SSHConnection from '../lib/SSHConnection'
+import SSHConnection from '../lib/SSHConnection';
 
 class LoginForm {
   constructor() {
@@ -15,27 +15,23 @@ class LoginForm {
       'setSshKeyDirty',
       'setRemoteHostErrorStatus',
       'setSshKeyErrorStatus',
-      'setSshUsernameErrorStatus'
-    )
+      'setSshUsernameErrorStatus',
+    );
   }
 
   connectToServer(host, user, key) {
-    this.setConnectError(null)
-    this.setConnecting(true)
+    this.setConnectError(null);
+    this.setConnecting(true);
 
     return new Promise((resolve, reject) => {
       SSHConnection.establish(host, user, key)
-        .then((resp) => {
-          return resolve(resp)
-        }, (err) => {
-          this.setConnectError(err.message)
-          return reject()
+        .then((resp) => resolve(resp), (err) => {
+          this.setConnectError(err.message);
+          return reject();
         })
-        .then(() => {
-          return this.setConnecting(false)
-        })
-    })
+        .then(() => this.setConnecting(false));
+    });
   }
 }
 
-export default alt.createActions(LoginForm)
+export default alt.createActions(LoginForm);

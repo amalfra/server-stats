@@ -1,11 +1,11 @@
-import alt from '../lib/alt'
+import alt from '../lib/alt';
 
 class App {
   constructor() {
     this.generateActions(
-      'setIsAuthenticated'
-    )
+      'setIsAuthenticated',
+    );
   }
 }
 
-export default alt.createActions(App)
+export default alt.createActions(App);

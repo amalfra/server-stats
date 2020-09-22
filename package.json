@@ -105,6 +105,7 @@
     "compile:dev": "webpack --config webpack.config.development.js",
     "compile:prod": "webpack --config webpack.config.production.js",
     "mocha": "mocha --compilers js:babel-core/register",
+    "fix:lint": "npm run pretest -- --fix",
     "pretest": "eslint --ignore-path .gitignore .",
     "test": "npm run compile:dev && npm run mocha -- './app/**/__tests__/*.js'",
     "test:e2e": "npm run compile:dev && ./node_modules/mocha/bin/mocha __tests__/index.js",

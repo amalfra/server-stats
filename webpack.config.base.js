@@ -1,6 +1,6 @@
-var CopyWebpackPlugin = require('copy-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
-var config = {
+const config = {
   target: 'electron-main',
   entry: [
     './app/index',
@@ -9,17 +9,17 @@ var config = {
     rules: [{
       test: /\.jsx?$/,
       loader: 'babel-loader',
-      exclude: /node_modules/
+      exclude: /node_modules/,
     }, {
       test: /\.png|\.svg$/,
-      loader: 'file-loader'
+      loader: 'file-loader',
     }, {
       test: /\.css$/,
-      loaders: ['style-loader', 'css-loader']
+      loaders: ['style-loader', 'css-loader'],
     }, {
       test: /\.(eot|svg|ttf|woff|woff2)$/,
-      loader: 'url-loader'
-    }]
+      loader: 'url-loader',
+    }],
   },
   plugins: [
     new CopyWebpackPlugin({
@@ -29,12 +29,12 @@ var config = {
     }),
   ],
   output: {
-    path: __dirname + '/build',
-    filename: 'bundle.js'
+    path: `${__dirname}/build`,
+    filename: 'bundle.js',
   },
   resolve: {
     extensions: ['.js', '.jsx'],
-  }
+  },
 };
 
 module.exports = config;

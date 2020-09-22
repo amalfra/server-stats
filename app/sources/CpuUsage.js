@@ -1,6 +1,6 @@
-import SSHConnection from '../lib/SSHConnection'
+import SSHConnection from '../lib/SSHConnection';
 
-let CpuUsage = {
+const CpuUsage = {
   fetch() {
     return new Promise((resolve, reject) => {
       /*
@@ -25,18 +25,16 @@ let CpuUsage = {
         Total CPU usage time since boot = Total CPU time since boot - Total CPU Idle time since boot
         Total CPU percentage = (Total CPU usage time since boot/Total CPU time since boot) * 100
       */
-      SSHConnection.exec('cat /proc/stat | grep "^cpu" | ' +
-        'sed "s/cpu//g"')
+      SSHConnection.exec('cat /proc/stat | grep "^cpu" | '
+        + 'sed "s/cpu//g"')
         .then((cmdStdout) => {
-          let cpuUsages = cmdStdout.split('\n')
+          const cpuUsages = cmdStdout.split('\n');
           // first line combined metrics of all cpus which we are not interested in
-          cpuUsages.shift()
-          return resolve(cpuUsages)
-        }, (cmdStderr, code) => {
-          return reject(cmdStderr)
-        })
-    })
-  }
-}
+          cpuUsages.shift();
+          return resolve(cpuUsages);
+        }, (cmdStderr, code) => reject(cmdStderr));
+    });
+  },
+};
 
-export default CpuUsage
+export default CpuUsage;
