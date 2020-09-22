@@ -56,6 +56,7 @@ describe('<CpuUsage />', () => {
 
     clickOnLoginBtn(credentials);
 
+    // eslint-disable-next-line no-unused-expressions
     expect(Router.Actions.dashboard.calledOnce).to.be.false;
   });
 });

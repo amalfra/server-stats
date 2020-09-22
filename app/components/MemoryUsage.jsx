@@ -1,8 +1,7 @@
 import React from 'react';
-import { Progress, Label } from 'semantic-ui-react';
+import { Progress } from 'semantic-ui-react';
 
 import OverallMemoryUsageStore from '../stores/OverallMemoryUsage';
-
 import Utils from '../Utils';
 
 class MemoryUsage extends React.Component {
@@ -26,28 +25,30 @@ class MemoryUsage extends React.Component {
   }
 
   render() {
+    const { memoryTotal, memoryUsed, memoryColours } = this.state;
+
     return (
       <article id="memory-usage">
-        { this.state.memoryTotal > 0
+        {memoryTotal > 0
           ? (
             <Progress
-              percent={(this.state.memoryUsed / this.state.memoryTotal)
+              percent={(memoryUsed / memoryTotal)
                 .toFixed(2) * 100}
-              color={this.state.memoryColours.mem}
+              color={memoryColours.mem}
               size="small"
             >
-              {(this.state.memoryUsed / this.state.memoryTotal).toFixed(2) * 100}
+              {(memoryUsed / memoryTotal).toFixed(2) * 100}
               %
               <br />
-              {Utils.humanMemorySize(this.state.memoryUsed)}
+              {Utils.humanMemorySize(memoryUsed)}
 &nbsp;of&nbsp;
-              {Utils.humanMemorySize(this.state.memoryTotal)}
+              {Utils.humanMemorySize(memoryTotal)}
             </Progress>
           )
           : (
             <Progress
               percent={0}
-              color={this.state.memoryColours.mem}
+              color={memoryColours.mem}
               size="small"
             >
               0%

@@ -1,14 +1,13 @@
 import React from 'react';
+import { func } from 'prop-types';
 import {
-  Button, Form, Input, Label, Icon, Grid, Header, TextArea, Segment,
-  Message,
+  Button, Form, Input, Icon, Grid, Header, Segment, Message,
 } from 'semantic-ui-react';
 import electron from 'electron';
 import fs from 'fs';
 
 import LoginFormStore from '../stores/LoginForm';
 import LoginFormAction from '../actions/LoginForm';
-
 import Utils from '../Utils';
 
 const { remote: { dialog } } = electron;
@@ -46,6 +45,11 @@ class LoginForm extends React.Component {
     this.setState(state);
   }
 
+  validateInput = (value, format) => {
+    const regex = new RegExp(format);
+    return regex.test(value);
+  };
+
   handleInputChange(e, name, value) {
     let inputName = e ? e.target.name : name;
     const inputValue = e ? e.target.value : value;
@@ -60,18 +64,14 @@ class LoginForm extends React.Component {
     LoginFormAction.setConnectError(null);
   }
 
-  validateInput(value, format) {
-    const regex = new RegExp(format);
-    return regex.test(value);
-  }
-
   handleFormSubmit(e) {
+    const { remoteHost, sshUsername, sshKey } = this.state;
+    const { onLoginSuccess } = this.props;
+
     e.preventDefault();
-    LoginFormAction.connectToServer(this.state.remoteHost,
-      this.state.sshUsername, fs.readFileSync(this.state.sshKey))
-      .then(() => {
-        this.props.onLoginSuccess();
-      }, () => {});
+    LoginFormAction.connectToServer(remoteHost,
+      sshUsername, fs.readFileSync(sshKey))
+      .then(onLoginSuccess, () => {});
   }
 
   handleFilepicker(e) {
@@ -90,12 +90,27 @@ class LoginForm extends React.Component {
           return;
         }
         this.handleInputChange(null, 'sshKey', result.filePaths[0]);
-      }).catch((err) => {
+      }).catch(() => {
         this.pickingFile = false;
       });
   }
 
   render() {
+    const {
+      connectError,
+      connecting,
+      remoteHostDirty,
+      isFormValid,
+      remoteHostErrorStatus,
+      remoteHost,
+      sshUsernameDirty,
+      sshUsernameErrorStatus,
+      sshUsername,
+      sshKeyDirty,
+      sshKeyErrorStatus,
+      sshKey,
+    } = this.state;
+
     return (
       <section className="login-form">
         <Grid
@@ -104,11 +119,11 @@ class LoginForm extends React.Component {
           verticalAlign="middle"
         >
           <Grid.Column style={{ maxWidth: 450 }}>
-            {this.state.connectError
+            {connectError
               && (
               <Message negative>
-                <Message.Header>That didn't work</Message.Header>
-                <p>{this.state.connectError}</p>
+                <Message.Header>That didn&apos;t work</Message.Header>
+                <p>{connectError}</p>
               </Message>
               )}
             <Header as="h2" color="teal" textAlign="center">
@@ -120,20 +135,18 @@ class LoginForm extends React.Component {
                   fluid
                   name="remoteHost"
                   placeholder="Remote host"
-                  readOnly={this.state.connecting}
-                  error={this.state.remoteHostDirty
-                    && this.state.remoteHostErrorStatus}
-                  value={this.state.remoteHost}
+                  readOnly={connecting}
+                  error={remoteHostDirty && remoteHostErrorStatus}
+                  value={remoteHost}
                   onChange={this.handleInputChange}
                 />
                 <Form.Input
                   fluid
                   name="sshUsername"
                   placeholder="SSH username"
-                  readOnly={this.state.connecting}
-                  error={this.state.sshUsernameDirty
-                    && this.state.sshUsernameErrorStatus}
-                  value={this.state.sshUsername}
+                  readOnly={connecting}
+                  error={sshUsernameDirty && sshUsernameErrorStatus}
+                  value={sshUsername}
                   onChange={this.handleInputChange}
                 />
                 <Form.Field>
@@ -142,10 +155,9 @@ class LoginForm extends React.Component {
                     icon
                     name="sshKey"
                     placeholder="SSH key file"
-                    readOnly={this.state.connecting}
-                    error={this.state.sshKeyDirty
-                      && this.state.sshKeyErrorStatus}
-                    value={this.state.sshKey}
+                    readOnly={connecting}
+                    error={sshKeyDirty && sshKeyErrorStatus}
+                    value={sshKey}
                     onClick={this.handleFilepicker}
                     onFocus={this.handleFilepicker}
                   >
@@ -155,8 +167,8 @@ class LoginForm extends React.Component {
                 </Form.Field>
                 <Button
                   fluid
-                  disabled={!this.state.isFormValid}
-                  loading={this.state.connecting}
+                  disabled={!isFormValid}
+                  loading={connecting}
                   color="teal"
                   size="large"
                 >
@@ -170,5 +182,13 @@ class LoginForm extends React.Component {
     );
   }
 }
+
+LoginForm.propTypes = {
+  onLoginSuccess: func,
+};
+
+LoginForm.defaultProps = {
+  onLoginSuccess: null,
+};
 
 export default LoginForm;

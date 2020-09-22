@@ -6,10 +6,6 @@ import LoginFormComponent from '../components/LoginForm';
 import AppActions from '../actions/App';
 
 class Login extends React.Component {
-  static propTypes = {
-    history: func,
-  };
-
   constructor() {
     super();
 
@@ -17,8 +13,10 @@ class Login extends React.Component {
   }
 
   loginSucessCallback() {
+    const { history } = this.props;
+
     AppActions.setIsAuthenticated(true);
-    this.props.history.push('/dashboard');
+    history.push('/dashboard');
   }
 
   render() {
@@ -27,5 +25,9 @@ class Login extends React.Component {
     );
   }
 }
+
+Login.propTypes = {
+  history: func.isRequired,
+};
 
 export default withRouter(Login);

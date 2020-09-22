@@ -4,13 +4,11 @@ import {
   Label, Grid, Header, Divider,
 } from 'semantic-ui-react';
 
+import MemoryUsageComponent from './MemoryUsage';
+import SwapUsageComponent from './SwapUsage';
 import OverallMemoryUsageStore from '../stores/OverallMemoryUsage';
 import OverallMemoryUsageActions from '../actions/OverallMemoryUsage';
 import OverallMemoryUsageSources from '../sources/OverallMemoryUsage';
-
-import MemoryUsageComponent from './MemoryUsage';
-import SwapUsageComponent from './SwapUsage';
-
 import Utils from '../Utils';
 
 class OverallMemoryUsage extends React.Component {
@@ -29,7 +27,8 @@ class OverallMemoryUsage extends React.Component {
       eg: [<Date object>, <Date object>, <Date object>, <Date object>, <Date object>]
       initialize with zero
     */
-    this.metricFetchTimes = new Array(this.state.metricMemoryLimit).fill(0);
+    const { metricMemoryLimit } = this.state;
+    this.metricFetchTimes = new Array(metricMemoryLimit).fill(0);
     this.memoryTypeLabels = {
       mem: 'Memory',
       swap: 'Swap',
@@ -55,18 +54,68 @@ class OverallMemoryUsage extends React.Component {
     this.setState(state);
   }
 
+  getOverallMemoryUsagePoller() {
+    const { metricMemoryLimit } = this.state;
+
+    OverallMemoryUsageSources.fetch().then((usages) => {
+      const newUsages = usages;
+      this.lastUpdated = new Date();
+      this.metricFetchTimes.push(this.lastUpdated);
+      // the chart will show only the latest n metrics, hence there should only be n labels
+      const start = this.metricFetchTimes.length - metricMemoryLimit;
+      const end = this.metricFetchTimes.length;
+      this.metricFetchTimes = this.metricFetchTimes.splice(start, end);
+
+      OverallMemoryUsageActions.setMemoryTotal(newUsages.mem.total);
+      OverallMemoryUsageActions.setMemoryAvailable(newUsages.mem.available);
+      OverallMemoryUsageActions.setMemoryUsed(newUsages.mem.used);
+      OverallMemoryUsageActions.setMemoryFree(newUsages.mem.free);
+      OverallMemoryUsageActions.setMemoryBuffcache(newUsages.mem.buffcache);
+      OverallMemoryUsageActions.setSwapTotal(newUsages.swap.total);
+      OverallMemoryUsageActions.setSwapUsed(newUsages.swap.used);
+      OverallMemoryUsageActions.setSwapFree(newUsages.swap.free);
+
+      // start calculating usage for each memory type and put result in usages
+      let usagePercentage = (1 - newUsages.mem.available / newUsages.mem.total) * 100;
+      newUsages.mem = usagePercentage.toFixed(2);
+      usagePercentage = newUsages.swap.free && newUsages.swap.total
+        ? (1 - newUsages.swap.free / newUsages.swap.total) * 100 : 0;
+      newUsages.swap = usagePercentage.toFixed(2);
+
+      /*
+        lets populate chart with all memory metrics:
+
+        usages is an Object with key as memory type(mem, swap) and value being
+        corresponding type's metric
+        eg: {
+          mem: 10.23 // metric of main memory
+          swap: 0.23 // metric of swap memory
+        }
+      */
+      this.plotChart(newUsages);
+
+      // fetch usage for next cycle
+      this.triggerNextCycle();
+    }, (err) => {
+      // eslint-disable-next-line no-console
+      console.error(err);
+      // don't fail, trigger next cycle, keep trying
+      this.triggerNextCycle();
+    });
+  }
+
   sinceTimeUpdater() {
+    const { overallMemoryUsageData } = this.state;
+
     // calculate metric fetched ago to display as x axis labels
-    for (let i = 0; i < this.metricFetchTimes.length; i++) {
+    for (let i = 0; i < this.metricFetchTimes.length; i += 1) {
       if (this.metricFetchTimes[i] !== 0) {
-        this.state.overallMemoryUsageData.labels[i] = `${Utils.findSecondsAgo(
+        overallMemoryUsageData.labels[i] = `${Utils.findSecondsAgo(
           this.metricFetchTimes[i],
         )}s ago`;
       }
     }
-    OverallMemoryUsageActions.setOverallMemoryUsageData(
-      this.state.overallMemoryUsageData,
-    );
+    OverallMemoryUsageActions.setOverallMemoryUsageData(overallMemoryUsageData);
 
     // calcuate updated since if we had a previous update
     if (this.lastUpdated) {
@@ -80,51 +129,6 @@ class OverallMemoryUsage extends React.Component {
     }, 1000);
   }
 
-  getOverallMemoryUsagePoller() {
-    OverallMemoryUsageSources.fetch().then((usages) => {
-      this.lastUpdated = new Date();
-      this.metricFetchTimes.push(this.lastUpdated);
-      // the chart will show only the latest n metrics, hence there should only be n labels
-      const start = this.metricFetchTimes.length - this.state.metricMemoryLimit;
-      const end = this.metricFetchTimes.length;
-      this.metricFetchTimes = this.metricFetchTimes.splice(start, end);
-
-      OverallMemoryUsageActions.setMemoryTotal(usages.mem.total);
-      OverallMemoryUsageActions.setMemoryAvailable(usages.mem.available);
-      OverallMemoryUsageActions.setMemoryUsed(usages.mem.used);
-      OverallMemoryUsageActions.setMemoryFree(usages.mem.free);
-      OverallMemoryUsageActions.setMemoryBuffcache(usages.mem.buffcache);
-      OverallMemoryUsageActions.setSwapTotal(usages.swap.total);
-      OverallMemoryUsageActions.setSwapUsed(usages.swap.used);
-      OverallMemoryUsageActions.setSwapFree(usages.swap.free);
-
-      // start calculating usage for each memory type and put result in usages
-      let usage_percentage = (1 - usages.mem.available / usages.mem.total) * 100;
-      usages.mem = usage_percentage.toFixed(2);
-      usage_percentage = usages.swap.free && usages.swap.total
-        ? (1 - usages.swap.free / usages.swap.total) * 100 : 0;
-      usages.swap = usage_percentage.toFixed(2);
-
-      /*
-        lets populate chart with all memory metrics:
-
-        usages is an Object with key as memory type(mem, swap) and value being
-        corresponding type's metric
-        eg: {
-          mem: 10.23 // metric of main memory
-          swap: 0.23 // metric of swap memory
-        }
-      */
-      this.plotChart(usages);
-
-      // fetch usage for next cycle
-      this.triggerNextCycle();
-    }, (err) => {
-      // don't fail, trigger next cycle, keep trying
-      this.triggerNextCycle();
-    });
-  }
-
   triggerNextCycle() {
     setTimeout(() => {
       this.getOverallMemoryUsagePoller();
@@ -132,37 +136,38 @@ class OverallMemoryUsage extends React.Component {
   }
 
   plotChart(usages) {
+    const { memoryColours, overallMemoryUsageData, metricMemoryLimit } = this.state;
     let i = 0;
-    for (const memType in usages) {
+
+    Object.values(usages).forEach((memType) => {
       const datasetTemplate = {
         label: this.memoryTypeLabels[memType],
         fill: false,
         showLine: true,
         lineTension: 0.1,
         borderCapStyle: 'butt',
-        borderColor: this.state.memoryColours[memType],
+        borderColor: memoryColours[memType],
         data: [],
       };
-      const previousDataset = this.state.overallMemoryUsageData.datasets[i];
+      const previousDataset = overallMemoryUsageData.datasets[i];
 
       datasetTemplate.data = previousDataset ? previousDataset.data
-        : new Array(this.state.metricMemoryLimit).fill(0);
+        : new Array(metricMemoryLimit).fill(0);
       datasetTemplate.data.push(usages[memType]);
 
       // the chart will show only the latest n metrics
-      const start = datasetTemplate.data.length - this.state.metricMemoryLimit;
+      const start = datasetTemplate.data.length - metricMemoryLimit;
       const end = datasetTemplate.data.length;
       datasetTemplate.data = datasetTemplate.data.splice(start, end);
-      this.state.overallMemoryUsageData.datasets[i] = datasetTemplate;
-      i++;
-    }
+      overallMemoryUsageData.datasets[i] = datasetTemplate;
+      i += 1;
+    });
 
-    OverallMemoryUsageActions.setOverallMemoryUsageData(
-      this.state.overallMemoryUsageData,
-    );
+    OverallMemoryUsageActions.setOverallMemoryUsageData(overallMemoryUsageData);
   }
 
   render() {
+    const { overallMemoryUsageData, updatedAgo } = this.state;
     const chartOptions = {
       scales: {
         yAxes: [{
@@ -185,7 +190,7 @@ class OverallMemoryUsage extends React.Component {
           <Grid.Row>
             <Grid.Column width={12}>
               <LineChart
-                data={this.state.overallMemoryUsageData}
+                data={overallMemoryUsageData}
                 options={chartOptions}
               />
             </Grid.Column>
@@ -220,8 +225,7 @@ class OverallMemoryUsage extends React.Component {
         <Label className="pull-right">
           Last updated:
           {' '}
-          { this.state.updatedAgo
-            ? `${this.state.updatedAgo} seconds ago` : 'not yet'}
+          {updatedAgo ? `${updatedAgo} seconds ago` : 'not yet'}
         </Label>
         <br className="clearfix" />
       </article>

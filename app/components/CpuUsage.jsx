@@ -5,7 +5,6 @@ import { Label } from 'semantic-ui-react';
 import CpuUsageStore from '../stores/CpuUsage';
 import CpuUsageActions from '../actions/CpuUsage';
 import CpuUsageSources from '../sources/CpuUsage';
-
 import Utils from '../Utils';
 
 class CpuUsage extends React.Component {
@@ -27,7 +26,8 @@ class CpuUsage extends React.Component {
       eg: [<Date object>, <Date object>, <Date object>, <Date object>, <Date object>]
       initialize with zero
     */
-    this.metricFetchTimes = new Array(this.state.metricMemoryLimit).fill(0);
+    const { metricMemoryLimit } = this.state;
+    this.metricFetchTimes = new Array(metricMemoryLimit).fill(0);
     this.cpuColours = [];
   }
 
@@ -47,56 +47,38 @@ class CpuUsage extends React.Component {
     this.setState(state);
   }
 
-  sinceTimeUpdater() {
-    // calculate metric fetched ago to display as x axis labels
-    for (let i = 0; i < this.metricFetchTimes.length; i++) {
-      if (this.metricFetchTimes[i] !== 0) {
-        this.state.cpuUsageData.labels[i] = `${Utils.findSecondsAgo(
-          this.metricFetchTimes[i],
-        )}s ago`;
-      }
-    }
-    CpuUsageActions.setCpuUsageData(this.state.cpuUsageData);
-
-    // calcuate updated since if we had a previous update
-    if (this.lastUpdated) {
-      CpuUsageActions.setUpdatedAgo(Utils.findSecondsAgo(this.lastUpdated));
-    }
-
-    setTimeout(() => {
-      this.sinceTimeUpdater();
-    }, 1000);
-  }
-
   getCpuUsagePoller() {
+    const { metricMemoryLimit } = this.state;
+
     CpuUsageSources.fetch().then((usages) => {
+      const newUsages = usages;
       this.lastUpdated = new Date();
       this.metricFetchTimes.push(this.lastUpdated);
       // the chart will show only the latest n metrics, hence there should only be n labels
-      const start = this.metricFetchTimes.length - this.state.metricMemoryLimit;
+      const start = this.metricFetchTimes.length - metricMemoryLimit;
       const end = this.metricFetchTimes.length;
       this.metricFetchTimes = this.metricFetchTimes.splice(start, end);
 
       // start calculating usage for each cpu and put result in usages
-      for (let i = 0; i < usages.length; i++) {
-        let usageMetrics = usages[i].split(' ');
+      for (let i = 0; i < newUsages.length; i += 1) {
+        let usageMetrics = newUsages[i].split(' ');
         // lets first convert all the data to int
         usageMetrics = usageMetrics.map((x) => parseInt(x, 10));
-        const total_time = usageMetrics[1] + usageMetrics[2] + usageMetrics[3]
+        const totalTime = usageMetrics[1] + usageMetrics[2] + usageMetrics[3]
           + usageMetrics[4] + usageMetrics[5] + usageMetrics[6]
           + usageMetrics[7] + usageMetrics[8];
-        const idle_time = usageMetrics[4] + usageMetrics[5];
+        const idleTime = usageMetrics[4] + usageMetrics[5];
         // calculate the diff usage since we last checked
-        const diff_idle_time = idle_time
+        const diffIdleTime = idleTime
           - (this.previousCpuUsageIdle[i] || 0);
-        const diff_total_time = total_time
+        const diffTotalTime = totalTime
           - (this.previousCpuUsageTotal[i] || 0);
-        const diff_usage_time = diff_total_time - diff_idle_time;
-        const diff_usage_percentage = (diff_usage_time / diff_total_time) * 100;
-        usages[i] = diff_usage_percentage.toFixed(2);
+        const diffUsageTime = diffTotalTime - diffIdleTime;
+        const diffUsagePercentage = (diffUsageTime / diffTotalTime) * 100;
+        newUsages[i] = diffUsagePercentage.toFixed(2);
         // present will be the past in future :-P
-        this.previousCpuUsageTotal[i] = total_time;
-        this.previousCpuUsageIdle[i] = idle_time;
+        this.previousCpuUsageTotal[i] = totalTime;
+        this.previousCpuUsageIdle[i] = idleTime;
       }
 
       /*
@@ -109,14 +91,36 @@ class CpuUsage extends React.Component {
           1: 0.23 // metric of second cpu
         }
       */
-      this.plotChart(usages);
+      this.plotChart(newUsages);
 
       // fetch usage for next cycle
       this.triggerNextCycle();
     }, (err) => {
+      // eslint-disable-next-line no-console
+      console.error(err);
       // don't fail, trigger next cycle, keep trying
       this.triggerNextCycle();
     });
+  }
+
+  sinceTimeUpdater() {
+    const { cpuUsageData } = this.state;
+    // calculate metric fetched ago to display as x axis labels
+    for (let i = 0; i < this.metricFetchTimes.length; i += 1) {
+      if (this.metricFetchTimes[i] !== 0) {
+        cpuUsageData.labels[i] = `${Utils.findSecondsAgo(
+          this.metricFetchTimes[i],
+        )}s ago`;
+      }
+    }
+    CpuUsageActions.setCpuUsageData(cpuUsageData);
+
+    // calcuate updated since if we had a previous update
+    if (this.lastUpdated) {
+      CpuUsageActions.setUpdatedAgo(Utils.findSecondsAgo(this.lastUpdated));
+    }
+
+    setTimeout(this.sinceTimeUpdater, 1000);
   }
 
   triggerNextCycle() {
@@ -126,7 +130,9 @@ class CpuUsage extends React.Component {
   }
 
   plotChart(usages) {
-    for (let cpuNumber = 0; cpuNumber < usages.length; cpuNumber++) {
+    const { cpuUsageData, metricMemoryLimit } = this.state;
+
+    for (let cpuNumber = 0; cpuNumber < usages.length; cpuNumber += 1) {
       // assign a colour to this cpu if its not yet done
       if (!this.cpuColours[cpuNumber]) {
         this.cpuColours[cpuNumber] = Utils.getRandomColour();
@@ -141,24 +147,25 @@ class CpuUsage extends React.Component {
         borderColor: this.cpuColours[cpuNumber],
         data: [],
       };
-      const previousDataset = this.state.cpuUsageData.datasets[cpuNumber];
+      const previousDataset = cpuUsageData.datasets[cpuNumber];
 
       datasetTemplate.label += cpuNumber + 1;
       datasetTemplate.data = previousDataset ? previousDataset.data
-        : new Array(this.state.metricMemoryLimit).fill(0);
+        : new Array(metricMemoryLimit).fill(0);
       datasetTemplate.data.push(usages[cpuNumber]);
 
       // the chart will show only the latest n metrics
-      const start = datasetTemplate.data.length - this.state.metricMemoryLimit;
+      const start = datasetTemplate.data.length - metricMemoryLimit;
       const end = datasetTemplate.data.length;
       datasetTemplate.data = datasetTemplate.data.splice(start, end);
-      this.state.cpuUsageData.datasets[cpuNumber] = datasetTemplate;
+      cpuUsageData.datasets[cpuNumber] = datasetTemplate;
     }
 
-    CpuUsageActions.setCpuUsageData(this.state.cpuUsageData);
+    CpuUsageActions.setCpuUsageData(cpuUsageData);
   }
 
   render() {
+    const { cpuUsageData, updatedAgo } = this.state;
     const chartOptions = {
       scales: {
         yAxes: [{
@@ -174,15 +181,15 @@ class CpuUsage extends React.Component {
         position: 'bottom',
       },
     };
+
     return (
       <article id="cpu-usage">
-        <LineChart data={this.state.cpuUsageData} options={chartOptions} />
+        <LineChart data={cpuUsageData} options={chartOptions} />
         <br />
         <Label className="pull-right">
           Last updated:
           {' '}
-          { this.state.updatedAgo
-            ? `${this.state.updatedAgo} seconds ago` : 'not yet'}
+          {updatedAgo ? `${updatedAgo} seconds ago` : 'not yet'}
         </Label>
         <br className="clearfix" />
       </article>

@@ -25,28 +25,30 @@ class SwapUsage extends React.Component {
   }
 
   render() {
+    const { swapTotal, swapUsed, memoryColours } = this.state;
+
     return (
       <article id="swap-usage">
-        { this.state.swapTotal > 0
+        {swapTotal > 0
           ? (
             <Progress
-              percent={(this.state.swapUsed / this.state.swapTotal)
+              percent={(swapUsed / swapTotal)
                 .toFixed(2) * 100}
-              color={this.state.memoryColours.swap}
+              color={memoryColours.swap}
               size="small"
             >
-              {(this.state.swapUsed / this.state.swapTotal).toFixed(2) * 100}
+              {(swapUsed / swapTotal).toFixed(2) * 100}
               %
               <br />
-              {Utils.humanMemorySize(this.state.swapUsed)}
+              {Utils.humanMemorySize(swapUsed)}
 &nbsp;of&nbsp;
-              {Utils.humanMemorySize(this.state.swapTotal)}
+              {Utils.humanMemorySize(swapTotal)}
             </Progress>
           )
           : (
             <Progress
               percent={0}
-              color={this.state.memoryColours.swap}
+              color={memoryColours.swap}
               size="small"
             >
               0%
