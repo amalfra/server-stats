@@ -1,18 +1,23 @@
 import React from 'react'
 import { Button, Form, Input, Label, Icon, Grid, Header, TextArea, Segment,
   Message } from 'semantic-ui-react'
-import { remote as Remote } from 'electron'
-const fs = require('fs')
+import electron from 'electron'
+import fs from 'fs'
 
 import LoginFormStore from '../stores/LoginForm'
 import LoginFormAction from '../actions/LoginForm'
 
 import Utils from '../Utils'
 
+const { remote: { dialog } } = electron;
+
 const inputValidFormats = {
   'RemoteHost': '^.+$',
   'SshUsername': '^.+$',
   'SshKey': '^(.|[\r\n])+$'
+}
+const dialogOptions = {
+  properties: ['openFile'],
 }
 
 class LoginForm extends React.Component {
@@ -73,14 +78,18 @@ class LoginForm extends React.Component {
       return
     }
     this.pickingFile = true
-    Remote.dialog.showOpenDialog((fileNames) => {
-      this.pickingFile = false
+    dialog.showOpenDialog(dialogOptions)
+    .then((result) => {
+      this.pickingFile = false;
+
       // fileNames is an array that contains all selected files
-      if (!fileNames) {
+      if (!result.filePaths) {
           return
       }
-      this.handleInputChange(null, 'sshKey', fileNames[0])
-    })
+      this.handleInputChange(null, 'sshKey', result.filePaths[0])
+    }).catch(err => {
+      this.pickingFile = false;
+    });
   }
 
   render() {
