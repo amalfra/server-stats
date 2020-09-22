@@ -124,9 +124,7 @@ class CpuUsage extends React.Component {
   }
 
   triggerNextCycle() {
-    setTimeout(() => {
-      this.getCpuUsagePoller();
-    }, 1500);
+    setTimeout(this.getCpuUsagePoller, 1500);
   }
 
   plotChart(usages) {

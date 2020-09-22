@@ -1,5 +1,5 @@
 import React from 'react';
-import { func } from 'prop-types';
+import { shape } from 'prop-types';
 import { withRouter } from 'react-router-dom';
 
 import LoginFormComponent from '../components/LoginForm';
@@ -27,7 +27,7 @@ class Login extends React.Component {
 }
 
 Login.propTypes = {
-  history: func.isRequired,
+  history: shape({}).isRequired,
 };
 
 export default withRouter(Login);
