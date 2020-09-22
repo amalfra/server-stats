@@ -1,27 +1,31 @@
-import React from 'react'
-import { withRouter } from 'react-router-dom'
+import React from 'react';
+import { func } from 'prop-types';
+import { withRouter } from 'react-router-dom';
 
-import LoginFormComponent from '../components/LoginForm'
-
-import AppActions from '../actions/App'
+import LoginFormComponent from '../components/LoginForm';
+import AppActions from '../actions/App';
 
 class Login extends React.Component {
-  constructor() {
-    super()
+  static propTypes = {
+    history: func,
+  };
 
-    this.loginSucessCallback = this.loginSucessCallback.bind(this)
+  constructor() {
+    super();
+
+    this.loginSucessCallback = this.loginSucessCallback.bind(this);
   }
 
-  loginSucessCallback(connection) {
-    AppActions.setIsAuthenticated(true)
-    this.props.history.push('/dashboard')
+  loginSucessCallback() {
+    AppActions.setIsAuthenticated(true);
+    this.props.history.push('/dashboard');
   }
 
   render() {
-    return(
+    return (
       <LoginFormComponent onLoginSuccess={this.loginSucessCallback} />
-    )
+    );
   }
 }
 
-export default withRouter(Login)
+export default withRouter(Login);

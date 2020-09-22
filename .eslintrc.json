@@ -1,4 +1,5 @@
 {
+  "extends": "airbnb",
   "parserOptions": {
     "ecmaVersion": 8
   },
@@ -8,8 +9,10 @@
     "es6": true,
     "browser": true
   },
-  "extends": "airbnb",
+  "plugins": ["babel"],
+  "parser": "babel-eslint",
   "rules": {
-    "max-len": [2, 120]
+    "max-len": [2, 120],
+    "react/jsx-props-no-spreading": "off"
   }
 }
