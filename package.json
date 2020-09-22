@@ -93,10 +93,11 @@
     "webpack-cli": "^3.3.12"
   },
   "dependencies": {
-    "prop-types": "^15.7.2",
-    "electron": "^9.2.0",
     "alt": "^0.18.6",
     "chart.js": "^2.9.3",
+    "core-js": "^3.6.5",
+    "electron": "^9.2.0",
+    "prop-types": "^15.7.2",
     "react": "^16.13.1",
     "react-chartjs-2": "^2.10.0",
     "react-dom": "^16.13.1",
@@ -114,7 +115,7 @@
     "fix:lint": "npm run pretest -- --fix",
     "pretest": "eslint --ext .jsx --ext .js --ignore-path .gitignore .",
     "test": "npm run compile:dev && npm run mocha -- --file './test-setup.js' './app/**/__tests__/*.{js,jsx}'",
-    "test:e2e": "npm run compile:dev && ./node_modules/mocha/bin/mocha __tests__/index.{js,jsx}",
+    "test:e2e": "npm run compile:dev && npm run mocha -- __tests__/index.{js,jsx}",
     "build:linux": "npm run compile:prod && electron-builder --linux --x64",
     "build:osx": "npm run compile:prod && electron-builder --mac --x64",
     "build:win": "npm run compile:prod && electron-builder --win --x64"

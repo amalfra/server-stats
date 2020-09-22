@@ -1,15 +1,21 @@
+import { assert } from 'chai';
+
 exports.run = (app) => {
-  describe('Test app window', () => {
+  describe('Test app window', function () {
     this.timeout(15000);
 
     beforeEach(() => app.start());
 
     afterEach(() => app.stop());
 
-    it('opens a window', () => app.client.waitUntilWindowLoaded()
-      .getWindowCount().should.eventually.equal(1));
+    it('opens a window', async () => {
+      const count = await app.client.getWindowCount();
+      assert.equal(count, 1);
+    });
 
-    it('tests the title', () => app.client.waitUntilWindowLoaded()
-      .getTitle().should.eventually.equal('Server Stats'));
+    it('tests the title', async () => {
+      const title = await app.client.getTitle();
+      assert.equal(title, 'Server Stats');
+    });
   });
 };
