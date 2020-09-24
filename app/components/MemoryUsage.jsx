@@ -20,9 +20,9 @@ class MemoryUsage extends React.Component {
     OverallMemoryUsageStore.unlisten(this.onChange);
   }
 
-  onChange(state) {
+  onChange = (state) => {
     this.setState(state);
-  }
+  };
 
   render() {
     const { memoryTotal, memoryUsed, memoryColours } = this.state;

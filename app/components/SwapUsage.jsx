@@ -20,9 +20,9 @@ class SwapUsage extends React.Component {
     OverallMemoryUsageStore.unlisten(this.onChange);
   }
 
-  onChange(state) {
+  onChange = (state) => {
     this.setState(state);
-  }
+  };
 
   render() {
     const { swapTotal, swapUsed, memoryColours } = this.state;
