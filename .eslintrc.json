@@ -13,6 +13,7 @@
   "parser": "babel-eslint",
   "rules": {
     "max-len": [2, 120],
-    "react/jsx-props-no-spreading": "off"
+    "react/jsx-props-no-spreading": "off",
+    "import/no-extraneous-dependencies": ["error", {"devDependencies": true}]
   }
 }
