@@ -72,7 +72,7 @@
     "babel-loader": "^8.1.0",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
-    "copy-webpack-plugin": "^6.0.3",
+    "copy-webpack-plugin": "^9.0.0",
     "css-loader": "^5.2.6",
     "electron": "^9.4.0",
     "electron-builder": "^22.8.0",
@@ -90,8 +90,8 @@
     "spectron": "^11.1.0",
     "style-loader": "^1.2.1",
     "url-loader": "^4.1.0",
-    "webpack": "^4.44.1",
-    "webpack-cli": "^3.3.12"
+    "webpack": "^5.38.1",
+    "webpack-cli": "^4.7.2"
   },
   "dependencies": {
     "alt": "^0.18.6",
