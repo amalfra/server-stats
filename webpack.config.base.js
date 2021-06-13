@@ -15,7 +15,7 @@ const config = {
       loader: 'file-loader',
     }, {
       test: /\.css$/,
-      loaders: ['style-loader', 'css-loader'],
+      use: ['style-loader', 'css-loader'],
     }, {
       test: /\.(eot|svg|ttf|woff|woff2)$/,
       loader: 'url-loader',

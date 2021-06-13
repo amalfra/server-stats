@@ -63,13 +63,13 @@
     ]
   },
   "devDependencies": {
-    "@babel/core": "^7.11.1",
-    "@babel/plugin-proposal-class-properties": "^7.10.4",
-    "@babel/preset-env": "^7.11.5",
-    "@babel/preset-react": "^7.10.4",
-    "@babel/register": "^7.11.5",
-    "babel-eslint": "^10.1.0",
-    "babel-loader": "^8.1.0",
+    "@babel/core": "^7.14.5",
+    "@babel/plugin-proposal-class-properties": "^7.14.5",
+    "@babel/preset-env": "^7.14.5",
+    "@babel/preset-react": "^7.14.5",
+    "@babel/register": "^7.14.5",
+    "@babel/eslint-parser": "^7.14.5",
+    "babel-loader": "^8.2.2",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
     "copy-webpack-plugin": "^9.0.0",
@@ -103,7 +103,7 @@
     "react-dom": "^16.13.1",
     "react-router-dom": "^5.2.0",
     "semantic-ui-css": "^2.4.1",
-    "semantic-ui-react": "^1.2.0",
+    "semantic-ui-react": "^2.0.3",
     "ssh2": "^0.8.9"
   },
   "scripts": {
