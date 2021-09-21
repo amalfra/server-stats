@@ -104,7 +104,7 @@
     "react-router-dom": "^5.2.0",
     "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^2.0.3",
-    "ssh2": "^0.8.9"
+    "ssh2": "^1.4.0"
   },
   "scripts": {
     "start": "npm run compile:dev && ENV=development ./node_modules/.bin/electron .",
