@@ -1,0 +1,28 @@
+on: [push, pull_request]
+name: Test
+jobs:
+  test-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js 14.17
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14.17
+      - run: npm ci
+      - run: npm test
+      - name: Run headless test
+        uses: GabrielBB/xvfb-action@v1
+        with:
+            run: npm run test:e2e
+  test-mac:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js 14.17
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14.17
+      - run: npm ci
+      - run: npm test
+      - run: npm run test:e2e
