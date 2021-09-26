@@ -41,15 +41,6 @@ class LoginForm extends React.Component {
     LoginFormStore.unlisten(this.onChange);
   }
 
-  onChange(state) {
-    this.setState(state);
-  }
-
-  validateInput = (value, format) => {
-    const regex = new RegExp(format);
-    return regex.test(value);
-  };
-
   handleInputChange(e, name, value) {
     let inputName = e ? e.target.name : name;
     const inputValue = e ? e.target.value : value;
@@ -94,6 +85,15 @@ class LoginForm extends React.Component {
         this.pickingFile = false;
       });
   }
+
+  onChange(state) {
+    this.setState(state);
+  }
+
+  validateInput = (value, format) => {
+    const regex = new RegExp(format);
+    return regex.test(value);
+  };
 
   render() {
     const {

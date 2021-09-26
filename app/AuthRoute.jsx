@@ -4,17 +4,18 @@ import { Route, Redirect } from 'react-router-dom';
 import AppStore from './stores/App';
 
 const AuthRoute = (component, ...props) => {
-  const { isPrivate } = component.component;
+  const { component: componentName } = component;
+  const { isPrivate } = componentName;
   const appState = AppStore.getState();
 
   if (appState.isAuthenticated) {
-    return <Route {...props} component={component.component} />;
+    return <Route {...props} component={componentName} />;
   }
   // if route is private, user is redirected to app's public root,
   // else user proceeds
   return isPrivate
     ? <Redirect to="/" />
-    : <Route {...props} component={component.component} />;
+    : <Route {...props} component={componentName} />;
 };
 
 export default AuthRoute;

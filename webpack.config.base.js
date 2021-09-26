@@ -6,20 +6,29 @@ const config = {
     './app/index',
   ],
   module: {
-    rules: [{
-      test: /\.jsx?$/,
-      loader: 'babel-loader',
-      exclude: /node_modules/,
-    }, {
-      test: /\.png|\.svg$/,
-      loader: 'file-loader',
-    }, {
-      test: /\.css$/,
-      use: ['style-loader', 'css-loader'],
-    }, {
-      test: /\.(eot|svg|ttf|woff|woff2)$/,
-      loader: 'url-loader',
-    }],
+    rules: [
+      {
+        test: /\.jsx?$/,
+        exclude: /(node_modules)/,
+        loader: 'babel-loader',
+      },
+      {
+        test: /\.png|\.svg$/,
+        loader: 'file-loader',
+      },
+      {
+        test: /\.css$/,
+        use: ['css-loader'],
+      },
+      {
+        test: /\.(woff|ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+        loader: 'url-loader',
+      },
+      {
+        test: /\.node$/,
+        loader: 'node-loader',
+      },
+    ],
   },
   plugins: [
     new CopyWebpackPlugin({
