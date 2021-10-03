@@ -110,11 +110,10 @@
     "start:win": "npm run compile:dev && set ENV=development && npx electron .",
     "compile:dev": "webpack --config webpack.config.development.js",
     "compile:prod": "webpack --config webpack.config.production.js",
-    "mocha": "mocha",
     "fix:lint": "npm run pretest -- --fix",
     "pretest": "eslint --ext .jsx --ext .js --ignore-path .gitignore .",
-    "test": "npm run compile:dev && npm run mocha -- --file './test-setup.js' './app/**/__tests__/*.{js,jsx}'",
-    "test:e2e": "npm run compile:dev && npm run mocha -- __tests__/index.{js,jsx}",
+    "test": "npm run compile:dev && npx mocha -- --file './test-setup.js' './app/**/__tests__/*.{js,jsx}'",
+    "test:e2e": "npm run compile:dev && npx mocha -- __tests__/index.js",
     "build:linux": "npm run compile:prod && electron-builder --linux --x64",
     "build:osx": "npm run compile:prod && electron-builder --mac --x64",
     "build:win": "npm run compile:prod && electron-builder --win --x64"
