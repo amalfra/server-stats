@@ -3,24 +3,18 @@ import { func } from 'prop-types';
 import {
   Button, Form, Input, Icon, Grid, Header, Segment, Message,
 } from 'semantic-ui-react';
-import electron from 'electron';
+import { ipcRenderer } from 'electron';
 import fs from 'fs';
 
 import LoginFormStore from '../stores/LoginForm';
 import LoginFormAction from '../actions/LoginForm';
 import Utils from '../Utils';
 
-const { remote: { dialog } } = electron;
-
 const inputValidFormats = {
   RemoteHost: '^.+$',
   SshUsername: '^.+$',
   SshKey: '^(.|[\r\n])+$',
 };
-const dialogOptions = {
-  properties: ['openFile'],
-};
-
 class LoginForm extends React.Component {
   constructor(props) {
     super(props);
@@ -72,7 +66,7 @@ class LoginForm extends React.Component {
       return;
     }
     this.pickingFile = true;
-    dialog.showOpenDialog(dialogOptions)
+    ipcRenderer.invoke('open-file')
       .then((result) => {
         this.pickingFile = false;
 

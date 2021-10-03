@@ -1,10 +1,9 @@
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
-const config = {
+module.exports = {
   target: 'electron-main',
-  entry: [
-    './app/index',
-  ],
+  entry: './app/index',
   module: {
     rules: [
       {
@@ -13,16 +12,12 @@ const config = {
         loader: 'babel-loader',
       },
       {
-        test: /\.png|\.svg$/,
-        loader: 'file-loader',
-      },
-      {
         test: /\.css$/,
-        use: ['css-loader'],
+        use: [MiniCssExtractPlugin.loader, 'css-loader'],
       },
       {
-        test: /\.(woff|ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-        loader: 'url-loader',
+        test: /\.(png|jpe?g|gif|svg|eot|ttf|woff|woff2)$/i,
+        type: 'asset',
       },
       {
         test: /\.node$/,
@@ -36,6 +31,9 @@ const config = {
         { from: 'app/index.html', to: 'index.html' },
       ],
     }),
+    new MiniCssExtractPlugin({
+      filename: 'style.css',
+    }),
   ],
   output: {
     path: `${__dirname}/build`,
@@ -45,5 +43,3 @@ const config = {
     extensions: ['.js', '.jsx'],
   },
 };
-
-module.exports = config;

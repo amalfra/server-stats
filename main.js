@@ -1,4 +1,6 @@
-const { app, BrowserWindow } = require('electron');
+const {
+  app, BrowserWindow, ipcMain, dialog,
+} = require('electron');
 const path = require('path');
 const url = require('url');
 
@@ -15,12 +17,14 @@ function createWindow() {
     minHeight: 768,
     webPreferences: {
       nodeIntegration: true,
+      contextIsolation: false,
+      enableRemoteModule: true,
     },
   });
 
   // and load the index.html of the app
   win.loadURL(url.format({
-    pathname: path.join(__dirname, 'build/index.html'),
+    pathname: path.join(__dirname, 'build', 'index.html'),
     protocol: 'file:',
     slashes: true,
   }));
@@ -32,6 +36,11 @@ function createWindow() {
     win = null;
   });
 }
+
+ipcMain.handle('open-file', async () => {
+  const result = await dialog.showOpenDialog({ properties: ['openFile'] });
+  return result;
+});
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
