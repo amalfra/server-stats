@@ -1,20 +1,20 @@
 import { assert } from 'chai';
 
-exports.run = (app) => {
-  describe('Test app window', function () {
-    this.timeout(15000);
+exports.run = (launchApp) => {
+  let electronApp;
+  let window;
 
-    beforeEach(() => app.start());
+  beforeEach(async () => {
+    ({ electronApp, window } = await launchApp());
+  });
 
-    afterEach(() => app.stop());
+  afterEach(async () => {
+    await electronApp.close();
+  });
 
-    it('opens a window', async () => {
-      const count = await app.client.getWindowCount();
-      assert.equal(count, 1);
-    });
-
+  describe('Test app window', () => {
     it('tests the title', async () => {
-      const title = await app.client.getTitle();
+      const title = await window.title();
       assert.equal(title, 'Server Stats');
     });
   });

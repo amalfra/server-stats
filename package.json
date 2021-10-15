@@ -88,8 +88,8 @@
     "mini-css-extract-plugin": "^2.3.0",
     "mocha": "^8.1.1",
     "node-loader": "^2.0.0",
+    "playwright": "^1.15.2",
     "sinon": "^9.0.3",
-    "spectron": "^15.0.0",
     "webpack": "^5.54.0",
     "webpack-cli": "^4.8.0"
   },
@@ -113,7 +113,7 @@
     "fix:lint": "npm run pretest -- --fix",
     "pretest": "eslint --ext .jsx --ext .js --ignore-path .gitignore .",
     "test": "npm run compile:dev && npx mocha -- --file './test-setup.js' './app/**/__tests__/*.{js,jsx}'",
-    "test:e2e": "npm run compile:dev && npx mocha -- __tests__/index.js",
+    "test:e2e": "npm run compile:dev && npx mocha --timeout 15000 -- __tests__/index.js",
     "build:linux": "npm run compile:prod && electron-builder --linux --x64",
     "build:osx": "npm run compile:prod && electron-builder --mac --x64",
     "build:win": "npm run compile:prod && electron-builder --win --x64"
