@@ -5,6 +5,9 @@ Server Stats
 
 A desktop app to view linux server resource usage using SSH. Available for:
 * Linux
+
+[![Get it from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-black.svg)](https://snapcraft.io/server-stats)
+
 * OSX
 * Windows
 
