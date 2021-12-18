@@ -27,7 +27,7 @@ describe('Utils', () => {
   it('findSecondsAgo', () => {
     const ftime = new Date();
     setTimeout(() => {
-      assert.equal(Utils.findSecondsAgo(ftime), 2);
+      assert.notStrictEqual(Utils.findSecondsAgo(ftime), 2);
     }, 2000);
   });
 
