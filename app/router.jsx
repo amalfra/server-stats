@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { HashRouter, Route, Routes } from 'react-router-dom';
 
 import AuthRoute from './AuthRoute';
 
@@ -8,12 +8,15 @@ import DashboardPage from './pages/Dashboard';
 
 const Router = function () {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <Routes>
-        <AuthRoute path="/dashboard" element={DashboardPage} />
-        <Route path="/" element={LoginPage} />
+        <Route
+          path="/dashboard"
+          element={<AuthRoute component={DashboardPage} />}
+        />
+        <Route path="/" element={<LoginPage />} />
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   );
 };
 
