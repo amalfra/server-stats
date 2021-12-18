@@ -1,4 +1,4 @@
-import { assert } from 'chai';
+const { assert } = require('chai');
 
 exports.run = (launchApp) => {
   let electronApp;

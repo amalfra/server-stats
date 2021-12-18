@@ -15,13 +15,26 @@ const inputValidFormats = {
   SshUsername: '^.+$',
   SshKey: '^(.|[\r\n])+$',
 };
+
+const handleInputChange = (e, name, value) => {
+  let inputName = e ? e.target.name : name;
+  const inputValue = e ? e.target.value : value;
+  inputName = Utils.capitalizeFirstLetter(inputName);
+  // validate the field value and set dirty status
+
+  const errorStatus = !new RegExp(inputValidFormats[inputName]).test(inputValue);
+  LoginFormAction[`set${inputName}`](inputValue);
+  LoginFormAction[`set${inputName}Dirty`](true);
+  LoginFormAction[`set${inputName}ErrorStatus`](errorStatus);
+  LoginFormAction.setConnectError(null);
+};
+
 class LoginForm extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = LoginFormStore.getState();
     this.onChange = this.onChange.bind(this);
-    this.handleInputChange = this.handleInputChange.bind(this);
     this.handleFormSubmit = this.handleFormSubmit.bind(this);
     this.handleFilepicker = this.handleFilepicker.bind(this);
     this.pickingFile = false;
@@ -35,27 +48,16 @@ class LoginForm extends React.Component {
     LoginFormStore.unlisten(this.onChange);
   }
 
-  handleInputChange(e, name, value) {
-    let inputName = e ? e.target.name : name;
-    const inputValue = e ? e.target.value : value;
-    inputName = Utils.capitalizeFirstLetter(inputName);
-    // validate the field value and set dirty status
-    const errorStatus = !this.validateInput(
-      inputValue, inputValidFormats[inputName],
-    );
-    LoginFormAction[`set${inputName}`](inputValue);
-    LoginFormAction[`set${inputName}Dirty`](true);
-    LoginFormAction[`set${inputName}ErrorStatus`](errorStatus);
-    LoginFormAction.setConnectError(null);
-  }
-
   handleFormSubmit(e) {
     const { remoteHost, sshUsername, sshKey } = this.state;
     const { onLoginSuccess } = this.props;
 
     e.preventDefault();
-    LoginFormAction.connectToServer(remoteHost,
-      sshUsername, fs.readFileSync(sshKey))
+    LoginFormAction.connectToServer(
+      remoteHost,
+      sshUsername,
+      fs.readFileSync(sshKey),
+    )
       .then(onLoginSuccess, () => {});
   }
 
@@ -74,7 +76,7 @@ class LoginForm extends React.Component {
         if (!result.filePaths) {
           return;
         }
-        this.handleInputChange(null, 'sshKey', result.filePaths[0]);
+        handleInputChange(null, 'sshKey', result.filePaths[0]);
       }).catch(() => {
         this.pickingFile = false;
       });
@@ -83,11 +85,6 @@ class LoginForm extends React.Component {
   onChange(state) {
     this.setState(state);
   }
-
-  validateInput = (value, format) => {
-    const regex = new RegExp(format);
-    return regex.test(value);
-  };
 
   render() {
     const {
@@ -132,7 +129,7 @@ class LoginForm extends React.Component {
                   readOnly={connecting}
                   error={remoteHostDirty && remoteHostErrorStatus}
                   value={remoteHost}
-                  onChange={this.handleInputChange}
+                  onChange={handleInputChange}
                 />
                 <Form.Input
                   fluid
@@ -141,7 +138,7 @@ class LoginForm extends React.Component {
                   readOnly={connecting}
                   error={sshUsernameDirty && sshUsernameErrorStatus}
                   value={sshUsername}
-                  onChange={this.handleInputChange}
+                  onChange={handleInputChange}
                 />
                 <Form.Field>
                   <Input

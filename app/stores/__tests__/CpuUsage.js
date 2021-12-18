@@ -14,8 +14,10 @@ describe('CpuUsageStore', () => {
     alt.dispatcher.dispatch({ action, data });
 
     assert.deepEqual(CpuUsageStore.getState().cpuUsageData.labels, data.labels);
-    assert.deepEqual(CpuUsageStore.getState().cpuUsageData.datasets,
-      data.datasets);
+    assert.deepEqual(
+      CpuUsageStore.getState().cpuUsageData.datasets,
+      data.datasets,
+    );
   });
 
   it('listens for setUpdatedAgo action', () => {

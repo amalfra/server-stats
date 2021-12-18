@@ -1,5 +1,5 @@
 import React from 'react';
-import { Line as LineChart, defaults } from 'react-chartjs-2';
+import { Line as LineChart } from 'react-chartjs-2';
 import { Label } from 'semantic-ui-react';
 
 import CpuUsageStore from '../stores/CpuUsage';
@@ -13,9 +13,6 @@ class CpuUsage extends React.Component {
 
     this.state = CpuUsageStore.getState();
     this.onChange = this.onChange.bind(this);
-
-    // disable chartjs animations
-    defaults.global.animation = false;
 
     // will hold values calculated in last cycle to find diff aganist
     this.previousCpuUsageTotal = [];

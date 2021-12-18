@@ -17,10 +17,12 @@ describe('Utils', () => {
     assert.equal(Utils.capitalizeFirstLetter('UTILS'), 'UTILS');
   });
 
-  it('capitalizeFirstLetter with first letter uppercase and rest mixed case',
+  it(
+    'capitalizeFirstLetter with first letter uppercase and rest mixed case',
     () => {
       assert.equal(Utils.capitalizeFirstLetter('UTilS'), 'UTilS');
-    });
+    },
+  );
 
   it('findSecondsAgo', () => {
     const ftime = new Date();

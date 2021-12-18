@@ -10,8 +10,11 @@ global.before(() => {
 
 describe('SSHConnection', () => {
   it('establish with wrong key', () => {
-    const connPromise = SSHConnection.establish('ssh.yourserver.com', 'username',
-      'fake key');
+    const connPromise = SSHConnection.establish(
+      'ssh.yourserver.com',
+      'username',
+      'fake key',
+    );
     return connPromise.should.be.rejected;
   });
 });

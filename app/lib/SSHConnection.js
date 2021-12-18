@@ -13,14 +13,13 @@ const SSHConnection = {
           privateKey: key,
         });
       } catch (e) {
-        return reject(e);
+        reject(e);
+        return;
       }
 
       this.con.on('error', (err) => reject(err));
 
       this.con.on('ready', (err) => resolve(err));
-
-      return null;
     });
   },
   exec(cmd) {

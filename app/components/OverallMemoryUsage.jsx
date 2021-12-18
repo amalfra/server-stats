@@ -1,5 +1,5 @@
 import React from 'react';
-import { Line as LineChart, defaults } from 'react-chartjs-2';
+import { Line as LineChart } from 'react-chartjs-2';
 import {
   Label, Grid, Header, Divider,
 } from 'semantic-ui-react';
@@ -17,9 +17,6 @@ class OverallMemoryUsage extends React.Component {
 
     this.state = OverallMemoryUsageStore.getState();
     this.onChange = this.onChange.bind(this);
-
-    // disable chartjs animations
-    defaults.global.animation = false;
 
     this.lastUpdated = 0;
     /*

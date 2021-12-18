@@ -1,11 +1,12 @@
 import React from 'react';
-import { shape } from 'prop-types';
-import { withRouter } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import LoginFormComponent from '../components/LoginForm';
 import AppActions from '../actions/App';
 
 class Login extends React.Component {
+  navigate = useNavigate();
+
   constructor() {
     super();
 
@@ -13,10 +14,8 @@ class Login extends React.Component {
   }
 
   loginSucessCallback() {
-    const { history } = this.props;
-
     AppActions.setIsAuthenticated(true);
-    history.push('/dashboard');
+    this.navigate('/dashboard');
   }
 
   render() {
@@ -26,8 +25,4 @@ class Login extends React.Component {
   }
 }
 
-Login.propTypes = {
-  history: shape({}).isRequired,
-};
-
-export default withRouter(Login);
+export default Login;

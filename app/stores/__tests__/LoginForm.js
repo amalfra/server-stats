@@ -111,15 +111,20 @@ describe('LoginFormStore', () => {
   });
 
   it('verify connectToServer error', () => {
-    const connectPromise = LoginFormActions.connectToServer('ssh.myserver.com',
-      'username', 'fake key');
+    const connectPromise = LoginFormActions.connectToServer(
+      'ssh.myserver.com',
+      'username',
+      'fake key',
+    );
     assert.equal(LoginFormStore.getState().connecting, true);
 
     return connectPromise.then(() => {
       assert.fail();
     }, () => {
-      assert.equal(LoginFormStore.getState().connectError,
-        'Cannot parse privateKey: Unsupported key format');
+      assert.equal(
+        LoginFormStore.getState().connectError,
+        'Cannot parse privateKey: Unsupported key format',
+      );
     }).then(() => {
       assert.equal(LoginFormStore.getState().connecting, false);
     });
