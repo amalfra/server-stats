@@ -11,7 +11,7 @@ const Router = function () {
     <HashRouter>
       <Routes>
         <Route
-          path="/dashboard"
+          path="/dashboard/*"
           element={<AuthRoute component={DashboardPage} />}
         />
         <Route path="/" element={<LoginPage />} />

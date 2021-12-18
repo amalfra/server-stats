@@ -49,7 +49,9 @@ class LoginForm extends React.Component {
   }
 
   handleFormSubmit(e) {
-    const { remoteHost, sshUsername, sshKey } = this.state;
+    const {
+      remoteHost, sshUsername, sshKey, passphrase,
+    } = this.state;
     const { onLoginSuccess } = this.props;
 
     e.preventDefault();
@@ -57,6 +59,7 @@ class LoginForm extends React.Component {
       remoteHost,
       sshUsername,
       fs.readFileSync(sshKey),
+      passphrase,
     )
       .then(onLoginSuccess, () => {});
   }
@@ -100,6 +103,9 @@ class LoginForm extends React.Component {
       sshKeyDirty,
       sshKeyErrorStatus,
       sshKey,
+      passphrase,
+      passphraseDirty,
+      passphraseErrorStatus,
     } = this.state;
 
     return (
@@ -156,6 +162,15 @@ class LoginForm extends React.Component {
                     <Icon name="file" />
                   </Input>
                 </Form.Field>
+                <Form.Input
+                  fluid
+                  name="passphrase"
+                  placeholder="SSH key passphrase (optional)"
+                  readOnly={connecting}
+                  error={passphraseDirty && passphraseErrorStatus}
+                  value={passphrase}
+                  onChange={handleInputChange}
+                />
                 <Button
                   fluid
                   disabled={!isFormValid}

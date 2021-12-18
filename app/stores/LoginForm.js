@@ -18,6 +18,9 @@ class LoginForm {
     this.remoteHostDirty = false;
     this.sshUsernameDirty = false;
     this.sshKeyDirty = false;
+    this.passphrase = '';
+    this.passphraseDirty = false;
+    this.passphraseErrorStatus = false;
   }
 
   onSetRemoteHost(remoteHost) {
@@ -71,6 +74,19 @@ class LoginForm {
 
   onSetConnecting(status) {
     this.connecting = status;
+  }
+
+  onPassphraseDirty(dirty) {
+    this.passphraseDirty = dirty;
+  }
+
+  onSetPassphraseErrorStatus(status) {
+    this.passphraseErrorStatus = status;
+    this.checkFormValidity();
+  }
+
+  onSetPassphrase(passphrase) {
+    this.passphrase = passphrase;
   }
 }
 

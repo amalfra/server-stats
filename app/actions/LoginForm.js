@@ -16,15 +16,18 @@ class LoginForm {
       'setRemoteHostErrorStatus',
       'setSshKeyErrorStatus',
       'setSshUsernameErrorStatus',
+      'setPassphrase',
+      'setPassphraseDirty',
+      'setPassphraseErrorStatus',
     );
   }
 
-  connectToServer(host, user, key) {
+  connectToServer(host, user, key, passphrase) {
     this.setConnectError(null);
     this.setConnecting(true);
 
     return new Promise((resolve, reject) => {
-      SSHConnection.establish(host, user, key)
+      SSHConnection.establish(host, user, key, passphrase)
         .then((resp) => resolve(resp), (err) => {
           this.setConnectError(err.message);
           return reject();

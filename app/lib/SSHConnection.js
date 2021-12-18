@@ -2,7 +2,7 @@ import { Client as SSHClient } from 'ssh2';
 
 const SSHConnection = {
   con: null,
-  establish(host, user, key) {
+  establish(host, user, key, passphrase) {
     this.con = new SSHClient();
     return new Promise((resolve, reject) => {
       try {
@@ -11,6 +11,7 @@ const SSHConnection = {
           port: 22,
           username: user,
           privateKey: key,
+          passphrase,
         });
       } catch (e) {
         reject(e);
