@@ -1,0 +1,24 @@
+on:
+  release:
+    types: [published]
+name: Release
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js 14.17
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14.17
+      - run: npm ci
+      - run: npm run build:linux
+      - name: Setup Snapcraft
+        run: |
+          sudo snap install snapcraft --classic
+          echo "$SNAP_TOKEN" | snapcraft login --with -
+          snapcraft
+          snapcraft upload --release=stable dist/*.snap        
+        env:
+          SNAP_TOKEN: ${{secrets.SNAP_TOKEN}} 
+          SNAPCRAFT_BUILD_ENVIRONMENT: host
