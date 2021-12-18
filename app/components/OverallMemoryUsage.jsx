@@ -11,6 +11,26 @@ import OverallMemoryUsageActions from '../actions/OverallMemoryUsage';
 import OverallMemoryUsageSources from '../sources/OverallMemoryUsage';
 import Utils from '../Utils';
 
+const chartOptions = {
+  responsive: true,
+  plugins: {
+    legend: {
+      position: 'bottom',
+    },
+  },
+/*
+  scales: {
+    yAxes: [{
+      ticks: {
+        min: 0,
+        max: 100,
+        stepSize: 20,
+        callback: (value) => `${value}%`,
+      },
+    }],
+*/
+};
+
 class OverallMemoryUsage extends React.Component {
   constructor() {
     super();
@@ -135,9 +155,6 @@ class OverallMemoryUsage extends React.Component {
     Object.keys(usages).forEach((memType) => {
       const datasetTemplate = {
         label: this.memoryTypeLabels[memType],
-        fill: false,
-        showLine: true,
-        lineTension: 0.1,
         borderCapStyle: 'butt',
         borderColor: memoryColours[memType],
         data: [],
@@ -161,21 +178,6 @@ class OverallMemoryUsage extends React.Component {
 
   render() {
     const { overallMemoryUsageData, updatedAgo } = this.state;
-    const chartOptions = {
-      scales: {
-        yAxes: [{
-          ticks: {
-            min: 0,
-            max: 100,
-            stepSize: 20,
-            callback: (value) => `${value}%`,
-          },
-        }],
-      },
-      legend: {
-        position: 'bottom',
-      },
-    };
 
     return (
       <article id="overall-memory-usage">
