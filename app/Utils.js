@@ -1,4 +1,4 @@
-const Utils = {
+export default {
   findSecondsAgo(from) {
     return Math.abs((new Date() - from) / 1000).toFixed(1);
   },
@@ -23,5 +23,3 @@ const Utils = {
     return `${(size / (1024 ** i)).toFixed(2) * 1} ${units[i]}`;
   },
 };
-
-export default Utils;
