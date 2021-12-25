@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
   AreaChart, Area, CartesianGrid, XAxis, YAxis, ResponsiveContainer,
+  Tooltip,
 } from 'recharts';
 import {
   Label, Grid, Header, Divider,
@@ -20,10 +21,6 @@ let lastUpdated = 0;
   initialize with zero
 */
 let metricFetchTimes = new Array(METRIC_MEMORY_LIMIT).fill(0);
-const memoryTypeLabels = {
-  mem: 'Memory',
-  swap: 'Swap',
-};
 const memoryColours = {
   mem: Utils.getRandomColour(),
   swap: Utils.getRandomColour(),
@@ -31,10 +28,7 @@ const memoryColours = {
 
 const OverallMemoryUsage = function () {
   const [updatedAgo, setUpdatedAgo] = useState(0);
-  const [overallMemoryUsageData, setOverallMemoryUsageData] = useState({
-    labels: new Array(METRIC_MEMORY_LIMIT).fill(''),
-    datasets: [],
-  });
+  const [overallMemoryUsageData, setOverallMemoryUsageData] = useState(new Array(METRIC_MEMORY_LIMIT).fill({}));
   const [memoryTotal, setMemoryTotal] = useState(0);
   const [memoryUsed, setMemoryUsed] = useState(0);
   const [swapTotal, setSwapTotal] = useState(0);
@@ -42,30 +36,32 @@ const OverallMemoryUsage = function () {
 
   useEffect(() => {
     const plotChart = (usages) => {
-      let i = 0;
+      let newOverallMemoryUsageData = overallMemoryUsageData;
 
-      Object.keys(usages).forEach((memType) => {
+      // calculate metric fetched ago to display as x axis labels
+      for (let i = 0; i < metricFetchTimes.length; i += 1) {
         const datasetTemplate = {
-          label: memoryTypeLabels[memType],
-          borderCapStyle: 'butt',
-          borderColor: memoryColours[memType],
-          data: [],
+          time: '0s ago',
         };
-        const previousDataset = overallMemoryUsageData.datasets[i];
 
-        datasetTemplate.data = previousDataset ? previousDataset.data
-          : new Array(METRIC_MEMORY_LIMIT).fill(0);
-        datasetTemplate.data.push(usages[memType]);
+        Object.keys(usages).forEach((memType) => {
+          datasetTemplate[memType] = usages[memType];
+        });
 
-        // the chart will show only the latest n metrics
-        const start = datasetTemplate.data.length - METRIC_MEMORY_LIMIT;
-        const end = datasetTemplate.data.length;
-        datasetTemplate.data = datasetTemplate.data.splice(start, end);
-        overallMemoryUsageData.datasets[i] = datasetTemplate;
-        i += 1;
-      });
+        // calculate metric fetched ago to display as x axis labels
+        if (metricFetchTimes[i] !== 0) {
+          datasetTemplate.time = `${Utils.findSecondsAgo(metricFetchTimes[i])}s ago`;
+        }
 
-      setOverallMemoryUsageData(overallMemoryUsageData);
+        newOverallMemoryUsageData.push(datasetTemplate);
+      }
+
+      // the chart will show only the latest n metrics
+      const start = newOverallMemoryUsageData.length - METRIC_MEMORY_LIMIT;
+      const end = newOverallMemoryUsageData.length;
+      newOverallMemoryUsageData = newOverallMemoryUsageData.splice(start, end);
+
+      setOverallMemoryUsageData(newOverallMemoryUsageData);
     };
 
     const getOverallMemoryUsagePoller = () => {
@@ -114,16 +110,6 @@ const OverallMemoryUsage = function () {
     };
 
     const sinceTimeUpdater = () => {
-      // calculate metric fetched ago to display as x axis labels
-      for (let i = 0; i < metricFetchTimes.length; i += 1) {
-        if (metricFetchTimes[i] !== 0) {
-          overallMemoryUsageData.labels[i] = `${Utils.findSecondsAgo(
-            metricFetchTimes[i],
-          )}s ago`;
-        }
-      }
-      setOverallMemoryUsageData(overallMemoryUsageData);
-
       // calcuate updated since if we had a previous update
       if (lastUpdated) {
         setUpdatedAgo(Utils.findSecondsAgo(lastUpdated));
@@ -145,7 +131,18 @@ const OverallMemoryUsage = function () {
           <Grid.Column width={12}>
             <ResponsiveContainer width="100%" height={400}>
               <AreaChart data={overallMemoryUsageData}>
+                <defs>
+                  <linearGradient id="colourMemory" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor={memoryColours.mem} stopOpacity={0.8} />
+                    <stop offset="95%" stopColor={memoryColours.mem} stopOpacity={0.5} />
+                  </linearGradient>
+                  <linearGradient id="colourSwap" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor={memoryColours.swap} stopOpacity={0.8} />
+                    <stop offset="95%" stopColor={memoryColours.swap} stopOpacity={0.5} />
+                  </linearGradient>
+                </defs>
                 <CartesianGrid strokeDasharray="3 3" />
+                <Tooltip />
                 <XAxis dataKey="time" />
                 <YAxis
                   type="number"
@@ -154,9 +151,19 @@ const OverallMemoryUsage = function () {
                 />
                 <Area
                   type="monotone"
-                  dataKey="data"
-                  stroke="#8884d8"
+                  dataKey="mem"
+                  stroke={memoryColours.mem}
                   activeDot={{ r: 8 }}
+                  fillOpacity={1}
+                  fill="url(#colourMemory)"
+                />
+                <Area
+                  type="monotone"
+                  dataKey="swap"
+                  stroke={memoryColours.swap}
+                  activeDot={{ r: 8 }}
+                  fillOpacity={1}
+                  fill="url(#colourSwap)"
                 />
               </AreaChart>
             </ResponsiveContainer>

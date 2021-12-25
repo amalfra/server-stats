@@ -14,10 +14,8 @@ const SwapUsage = function ({ swapTotal, swapUsed, memoryColour }) {
               .toFixed(2) * 100}
             color={memoryColour}
             size="small"
+            progress
           >
-            {(swapUsed / swapTotal).toFixed(2) * 100}
-            %
-            <br />
             {Utils.humanMemorySize(swapUsed)}
 &nbsp;of&nbsp;
             {Utils.humanMemorySize(swapTotal)}
@@ -28,9 +26,8 @@ const SwapUsage = function ({ swapTotal, swapUsed, memoryColour }) {
             percent={0}
             color={memoryColour}
             size="small"
+            progress
           >
-            0%
-            <br />
             0MB of 0MB
           </Progress>
         )}

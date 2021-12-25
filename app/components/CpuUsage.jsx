@@ -135,7 +135,7 @@ const CpuUsage = function () {
         <AreaChart data={cpuUsageData}>
           <defs>
             {cpuColours.map((cpuColour, index) => (
-              <linearGradient id={`color${`Cpu${index + 1}`}`} x1="0" y1="0" x2="0" y2="1">
+              <linearGradient key={`cpu${index + 1}`} id={`color${`Cpu${index + 1}`}`} x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor={cpuColour} stopOpacity={0.8} />
                 <stop offset="95%" stopColor={cpuColour} stopOpacity={0.5} />
               </linearGradient>
@@ -151,6 +151,7 @@ const CpuUsage = function () {
           />
           {cpuColours.map((cpuColour, index) => (
             <Area
+              key={`cpu${index + 1}`}
               type="monotone"
               dataKey={`cpu${index + 1}`}
               stroke={cpuColour}

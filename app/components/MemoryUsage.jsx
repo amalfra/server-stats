@@ -14,10 +14,8 @@ const MemoryUsage = function ({ memoryTotal, memoryUsed, memoryColour }) {
               .toFixed(2) * 100}
             color={memoryColour}
             size="small"
+            progress
           >
-            {(memoryUsed / memoryTotal).toFixed(2) * 100}
-            %
-            <br />
             {Utils.humanMemorySize(memoryUsed)}
 &nbsp;of&nbsp;
             {Utils.humanMemorySize(memoryTotal)}
@@ -28,9 +26,8 @@ const MemoryUsage = function ({ memoryTotal, memoryUsed, memoryColour }) {
             percent={0}
             color={memoryColour}
             size="small"
+            progress
           >
-            0%
-            <br />
             0MB of 0MB
           </Progress>
         )}
