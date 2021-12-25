@@ -14,6 +14,9 @@ A desktop app to view linux server resource usage using SSH. Available for:
 ![demo](https://raw.githubusercontent.com/amalfra/server-stats/master/.images/demo.gif)
 
 ## Usage
+
+* For linux it can be installed via snap as ```sudo snap install server-stats```
+
 You can download the latest release [here](https://github.com/amalfra/server-stats/releases).
 
 Install and connect to your server with SSH credentials through login screen.
