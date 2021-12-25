@@ -13,7 +13,5 @@ jobs:
           node-version: 14.17
       - run: npm ci
       - run: sudo snap install snapcraft --classic
-      - run: |
-          mkdir .snapcraft
-          echo $SNAPCRAFT_LOGIN_FILE > .snapcraft/snapcraft.cfg 
+      - run: echo $SNAPCRAFT_LOGIN_FILE | snapcraft login --with -
       - run: npm run build:linux -- --publish always
