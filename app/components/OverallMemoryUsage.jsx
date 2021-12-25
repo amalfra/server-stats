@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Line as LineChart } from 'react-chartjs-2';
+import {
+  AreaChart, Area, CartesianGrid, XAxis, YAxis, ResponsiveContainer,
+} from 'recharts';
 import {
   Label, Grid, Header, Divider,
 } from 'semantic-ui-react';
@@ -9,14 +11,6 @@ import SwapUsageComponent from './SwapUsage';
 import OverallMemoryUsageSources from '../sources/OverallMemoryUsage';
 import Utils from '../Utils';
 
-const CHART_OPTIONS = {
-  responsive: true,
-  plugins: {
-    legend: {
-      position: 'bottom',
-    },
-  },
-};
 const METRIC_MEMORY_LIMIT = 5;
 
 let lastUpdated = 0;
@@ -132,9 +126,7 @@ const OverallMemoryUsage = function () {
 
       // calcuate updated since if we had a previous update
       if (lastUpdated) {
-        setUpdatedAgo(Utils.findSecondsAgo(
-          lastUpdated,
-        ));
+        setUpdatedAgo(Utils.findSecondsAgo(lastUpdated));
       }
 
       setTimeout(sinceTimeUpdater, 1000);
@@ -144,17 +136,30 @@ const OverallMemoryUsage = function () {
     getOverallMemoryUsagePoller();
     // keep time since updated
     sinceTimeUpdater();
-  });
+  }, []);
 
   return (
     <article id="overall-memory-usage">
       <Grid container>
         <Grid.Row>
           <Grid.Column width={12}>
-            <LineChart
-              data={overallMemoryUsageData}
-              options={CHART_OPTIONS}
-            />
+            <ResponsiveContainer width="100%" height={400}>
+              <AreaChart data={overallMemoryUsageData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="time" />
+                <YAxis
+                  type="number"
+                  domain={[0, 100]}
+                  tickFormatter={(tick) => `${tick} %`}
+                />
+                <Area
+                  type="monotone"
+                  dataKey="data"
+                  stroke="#8884d8"
+                  activeDot={{ r: 8 }}
+                />
+              </AreaChart>
+            </ResponsiveContainer>
           </Grid.Column>
           <Grid.Column width={4}>
             <Grid.Row>

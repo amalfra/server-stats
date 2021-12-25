@@ -1,30 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
+  AreaChart, Area, CartesianGrid, XAxis, YAxis, ResponsiveContainer,
   Tooltip,
-  Legend,
-} from 'chart.js';
-import { Line as LineChart } from 'react-chartjs-2';
+} from 'recharts';
 import { Label } from 'semantic-ui-react';
 
 import CpuUsageSources from '../sources/CpuUsage';
 import Utils from '../Utils';
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
-
-const CHART_OPTIONS = {
-  responsive: true,
-  plugins: {
-    legend: {
-      position: 'bottom',
-    },
-  },
-};
 const METRIC_MEMORY_LIMIT = 5;
 
 // will hold values calculated in last cycle to find diff aganist
@@ -41,40 +24,39 @@ const cpuColours = [];
 
 const CpuUsage = function () {
   const [updatedAgo, setUpdatedAgo] = useState(0);
-  const [cpuUsageData, setCpuUsageData] = useState({
-    labels: new Array(METRIC_MEMORY_LIMIT).fill(''),
-    datasets: [],
-  });
+  const [cpuUsageData, setCpuUsageData] = useState(new Array(METRIC_MEMORY_LIMIT).fill({}));
 
   useEffect(() => {
     const plotChart = (usages) => {
-      for (let cpuNumber = 0; cpuNumber < usages.length; cpuNumber += 1) {
-        // assign a colour to this cpu if its not yet done
-        if (!cpuColours[cpuNumber]) {
-          cpuColours[cpuNumber] = Utils.getRandomColour();
-        }
+      let newCpuUsageData = cpuUsageData;
 
+      // calculate metric fetched ago to display as x axis labels
+      for (let i = 0; i < metricFetchTimes.length; i += 1) {
         const datasetTemplate = {
-          label: 'CPU',
-          borderCapStyle: 'butt',
-          borderColor: cpuColours[cpuNumber],
-          data: [],
+          time: '0s ago',
         };
-        const previousDataset = cpuUsageData.datasets[cpuNumber];
 
-        datasetTemplate.label += cpuNumber + 1;
-        datasetTemplate.data = previousDataset ? previousDataset.data
-          : new Array(METRIC_MEMORY_LIMIT).fill(0);
-        datasetTemplate.data.push(usages[cpuNumber]);
+        for (let cpuNumber = 0; cpuNumber < usages.length; cpuNumber += 1) {
+          // assign a colour to this cpu if its not yet done
+          if (!cpuColours[cpuNumber]) {
+            cpuColours[cpuNumber] = Utils.getRandomColour();
+          }
 
-        // the chart will show only the latest n metrics
-        const start = datasetTemplate.data.length - METRIC_MEMORY_LIMIT;
-        const end = datasetTemplate.data.length;
-        datasetTemplate.data = datasetTemplate.data.splice(start, end);
-        cpuUsageData.datasets[cpuNumber] = datasetTemplate;
+          datasetTemplate[`cpu${cpuNumber + 1}`] = 0;
+          if (metricFetchTimes[i] !== 0) {
+            datasetTemplate.time = `${Utils.findSecondsAgo(metricFetchTimes[i])}s ago`;
+            datasetTemplate[`cpu${cpuNumber + 1}`] = usages[cpuNumber];
+          }
+        }
+        newCpuUsageData.push(datasetTemplate);
       }
 
-      setCpuUsageData(cpuUsageData);
+      // the chart will show only the latest n metrics
+      const start = newCpuUsageData.length - METRIC_MEMORY_LIMIT;
+      const end = newCpuUsageData.length;
+      newCpuUsageData = newCpuUsageData.splice(start, end);
+
+      setCpuUsageData(newCpuUsageData);
     };
 
     const getCpuUsagePoller = () => {
@@ -133,16 +115,6 @@ const CpuUsage = function () {
     };
 
     const sinceTimeUpdater = () => {
-      // calculate metric fetched ago to display as x axis labels
-      for (let i = 0; i < metricFetchTimes.length; i += 1) {
-        if (metricFetchTimes[i] !== 0) {
-          cpuUsageData.labels[i] = `${Utils.findSecondsAgo(
-            metricFetchTimes[i],
-          )}s ago`;
-        }
-      }
-      setCpuUsageData(cpuUsageData);
-
       // calcuate updated since if we had a previous update
       if (lastUpdated) {
         setUpdatedAgo(Utils.findSecondsAgo(lastUpdated));
@@ -159,7 +131,36 @@ const CpuUsage = function () {
 
   return (
     <article id="cpu-usage">
-      <LineChart data={cpuUsageData} options={CHART_OPTIONS} />
+      <ResponsiveContainer width="100%" height={400}>
+        <AreaChart data={cpuUsageData}>
+          <defs>
+            {cpuColours.map((cpuColour, index) => (
+              <linearGradient id={`color${`Cpu${index + 1}`}`} x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor={cpuColour} stopOpacity={0.8} />
+                <stop offset="95%" stopColor={cpuColour} stopOpacity={0.5} />
+              </linearGradient>
+            ))}
+          </defs>
+          <CartesianGrid strokeDasharray="3 3" />
+          <Tooltip />
+          <XAxis dataKey="time" />
+          <YAxis
+            type="number"
+            domain={[0, 100]}
+            tickFormatter={(tick) => `${tick} %`}
+          />
+          {cpuColours.map((cpuColour, index) => (
+            <Area
+              type="monotone"
+              dataKey={`cpu${index + 1}`}
+              stroke={cpuColour}
+              activeDot={{ r: 8 }}
+              fillOpacity={1}
+              fill={`url(#${`color${`Cpu${index + 1}`}`})`}
+            />
+          ))}
+        </AreaChart>
+      </ResponsiveContainer>
       <br />
       <Label className="pull-right">
         Last updated:
