@@ -12,4 +12,5 @@ jobs:
         with:
           node-version: 14.17
       - run: npm ci
+      - run: sudo snap install snapcraft --classic  
       - run: npm run build:linux -- --publish always
