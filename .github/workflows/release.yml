@@ -13,5 +13,10 @@ jobs:
           node-version: 14.17
       - run: npm ci
       - run: sudo snap install snapcraft --classic
-      - run: echo $SNAPCRAFT_LOGIN_FILE | snapcraft login --with -
+      - name: Seed Snapcraft Store credentials
+        env:
+          SNAPCRAFT_LOGIN_FILE: ${{ secrets.SNAPCRAFT_LOGIN_FILE }}
+        run: |
+          echo $SNAPCRAFT_LOGIN_FILE | base64 --decode --ignore-garbage > snapcraft.login
+          snapcraft login --with snapcraft.login
       - run: npm run build:linux -- --publish always
