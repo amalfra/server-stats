@@ -12,13 +12,4 @@ jobs:
         with:
           node-version: 14.17
       - run: npm ci
-      - run: npm run build:linux
-      - name: Setup Snapcraft
-        run: |
-          sudo snap install snapcraft --classic
-          echo "$SNAP_TOKEN" | snapcraft login --with -
-          snapcraft
-          snapcraft upload --release=stable dist/*.snap        
-        env:
-          SNAP_TOKEN: ${{secrets.SNAP_TOKEN}} 
-          SNAPCRAFT_BUILD_ENVIRONMENT: host
+      - run: npm run build:linux -- --publish always
