@@ -56,7 +56,9 @@
     "directories": {
       "buildResources": "resources"
     },
-    "publish": null,
+    "publish": {
+      "channels": ["stable"]
+    },
     "files": [
       "build/*",
       "resources/*",
