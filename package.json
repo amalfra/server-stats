@@ -56,10 +56,13 @@
     "directories": {
       "buildResources": "resources"
     },
-    "publish": {
-      "provider": "snapStore",
-      "channels": ["stable"]
+    "snap": {
+      "grade": "stable",
+      "publish": [
+        "snapStore"
+      ]
     },
+    "publish": null,
     "files": [
       "build/*",
       "resources/*",
