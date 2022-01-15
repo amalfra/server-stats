@@ -57,6 +57,7 @@
       "buildResources": "resources"
     },
     "publish": {
+      "provider": "snapStore",
       "channels": ["stable"]
     },
     "files": [
