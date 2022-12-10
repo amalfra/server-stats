@@ -18,7 +18,7 @@ const inputValidFormats = {
 
 const handleInputChange = (e, name, value) => {
   let inputName = e ? e.target.name : name;
-  const inputValue = e ? e.target.value : value;
+  const inputValue = (e ? e.target.value : value) || '';
   inputName = Utils.capitalizeFirstLetter(inputName);
   // validate the field value and set dirty status
 
