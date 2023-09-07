@@ -108,7 +108,7 @@
     "react-router-dom": "^6.2.1",
     "recharts": "^2.1.14",
     "semantic-ui-react": "^2.0.4",
-    "ssh2": "^1.11.0"
+    "ssh2": "^1.14.0"
   },
   "scripts": {
     "start": "npm run compile:dev && ENV=development npx electron .",
