@@ -2,6 +2,7 @@ Server Stats
 ========
 [![GitHub release](https://img.shields.io/github/release/amalfra/server-stats.svg)](https://github.com/amalfra/server-stats/releases)
 ![Build Status](https://github.com/amalfra/server-stats/actions/workflows/test.yml/badge.svg?branch=main)
+[![Coverage Status](https://coveralls.io/repos/github/amalfra/server-stats/badge.svg?branch=main)](https://coveralls.io/github/amalfra/server-stats?branch=main)
 
 A desktop app to view linux server resource usage using SSH. Available for:
 * Linux
