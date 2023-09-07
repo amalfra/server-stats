@@ -1,5 +1,3 @@
-const { assert } = require('chai');
-
 exports.run = (launchApp) => {
   let electronApp;
   let window;
@@ -15,7 +13,7 @@ exports.run = (launchApp) => {
   describe('Test app window', () => {
     it('tests the title', async () => {
       const title = await window.title();
-      assert.equal(title, 'Server Stats');
+      expect(title).toEqual('Server Stats');
     });
   });
 };

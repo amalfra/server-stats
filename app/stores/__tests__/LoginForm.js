@@ -1,5 +1,3 @@
-import { assert } from 'chai';
-
 import alt from '../../lib/alt';
 import LoginFormStore from '../LoginForm';
 import LoginFormActions from '../../actions/LoginForm';
@@ -10,7 +8,7 @@ describe('LoginFormStore', () => {
       action = LoginFormActions.SET_CONNECTING;
     alt.dispatcher.dispatch({ action, data });
 
-    assert.equal(LoginFormStore.getState().connecting, data);
+    expect(LoginFormStore.getState().connecting).toEqual(data);
   });
 
   it('listens for setConnectError action', () => {
@@ -18,7 +16,7 @@ describe('LoginFormStore', () => {
       action = LoginFormActions.SET_CONNECT_ERROR;
     alt.dispatcher.dispatch({ action, data });
 
-    assert.deepEqual(LoginFormStore.getState().connectError, data);
+    expect(LoginFormStore.getState().connectError).toEqual(data);
   });
 
   it('listens for setRemoteHost action', () => {
@@ -26,7 +24,7 @@ describe('LoginFormStore', () => {
       action = LoginFormActions.SET_REMOTE_HOST;
     alt.dispatcher.dispatch({ action, data });
 
-    assert.equal(LoginFormStore.getState().remoteHost, data);
+    expect(LoginFormStore.getState().remoteHost).toEqual(data);
   });
 
   it('listens for setSshUsername action', () => {
@@ -34,7 +32,7 @@ describe('LoginFormStore', () => {
       action = LoginFormActions.SET_SSH_USERNAME;
     alt.dispatcher.dispatch({ action, data });
 
-    assert.equal(LoginFormStore.getState().sshUsername, data);
+    expect(LoginFormStore.getState().sshUsername).toEqual(data);
   });
 
   it('listens for setSshKey action', () => {
@@ -42,7 +40,7 @@ describe('LoginFormStore', () => {
       action = LoginFormActions.SET_SSH_KEY;
     alt.dispatcher.dispatch({ action, data });
 
-    assert.equal(LoginFormStore.getState().sshKey, data);
+    expect(LoginFormStore.getState().sshKey).toEqual(data);
   });
 
   it('listens for setRemoteHostDirty action', () => {
@@ -50,7 +48,7 @@ describe('LoginFormStore', () => {
       action = LoginFormActions.SET_REMOTE_HOST_DIRTY;
     alt.dispatcher.dispatch({ action, data });
 
-    assert.equal(LoginFormStore.getState().remoteHostDirty, data);
+    expect(LoginFormStore.getState().remoteHostDirty).toEqual(data);
   });
 
   it('listens for setSshUsernameDirty action', () => {
@@ -58,7 +56,7 @@ describe('LoginFormStore', () => {
       action = LoginFormActions.SET_SSH_USERNAME_DIRTY;
     alt.dispatcher.dispatch({ action, data });
 
-    assert.equal(LoginFormStore.getState().sshUsernameDirty, data);
+    expect(LoginFormStore.getState().sshUsernameDirty).toEqual(data);
   });
 
   it('listens for setSshKeyDirty action', () => {
@@ -66,7 +64,7 @@ describe('LoginFormStore', () => {
       action = LoginFormActions.SET_SSH_KEY_DIRTY;
     alt.dispatcher.dispatch({ action, data });
 
-    assert.equal(LoginFormStore.getState().sshKeyDirty, data);
+    expect(LoginFormStore.getState().sshKeyDirty).toEqual(data);
   });
 
   it('listens for setRemoteHostErrorStatus action', () => {
@@ -74,8 +72,8 @@ describe('LoginFormStore', () => {
       action = LoginFormActions.SET_REMOTE_HOST_ERROR_STATUS;
     alt.dispatcher.dispatch({ action, data });
 
-    assert.equal(LoginFormStore.getState().remoteHostErrorStatus, data);
-    assert.equal(LoginFormStore.getState().isFormValid, false);
+    expect(LoginFormStore.getState().remoteHostErrorStatus).toEqual(data);
+    expect(LoginFormStore.getState().isFormValid).toEqual(false);
   });
 
   it('listens for setSshKeyErrorStatus action', () => {
@@ -83,8 +81,8 @@ describe('LoginFormStore', () => {
       action = LoginFormActions.SET_SSH_KEY_ERROR_STATUS;
     alt.dispatcher.dispatch({ action, data });
 
-    assert.equal(LoginFormStore.getState().sshKeyErrorStatus, data);
-    assert.equal(LoginFormStore.getState().isFormValid, false);
+    expect(LoginFormStore.getState().sshKeyErrorStatus).toEqual(data);
+    expect(LoginFormStore.getState().isFormValid).toEqual(false);
   });
 
   it('listens for setSshUsernameErrorStatus action', () => {
@@ -92,8 +90,8 @@ describe('LoginFormStore', () => {
       action = LoginFormActions.SET_SSH_USERNAME_ERROR_STATUS;
     alt.dispatcher.dispatch({ action, data });
 
-    assert.equal(LoginFormStore.getState().sshUsernameErrorStatus, data);
-    assert.equal(LoginFormStore.getState().isFormValid, false);
+    expect(LoginFormStore.getState().sshUsernameErrorStatus).toEqual(data);
+    expect(LoginFormStore.getState().isFormValid).toEqual(false);
   });
 
   it('verify form validation', () => {
@@ -107,7 +105,7 @@ describe('LoginFormStore', () => {
     action = LoginFormActions.SET_REMOTE_HOST_ERROR_STATUS;
     alt.dispatcher.dispatch({ action, data });
 
-    assert.equal(LoginFormStore.getState().isFormValid, true);
+    expect(LoginFormStore.getState().isFormValid).toEqual(true);
   });
 
   it('verify connectToServer error', () => {
@@ -116,17 +114,16 @@ describe('LoginFormStore', () => {
       'username',
       'fake key',
     );
-    assert.equal(LoginFormStore.getState().connecting, true);
+    expect(LoginFormStore.getState().connecting).toEqual(true);
 
     return connectPromise.then(() => {
-      assert.fail();
+      throw new Error('fail');
     }, () => {
-      assert.equal(
+      expect(
         LoginFormStore.getState().connectError,
-        'Cannot parse privateKey: Unsupported key format',
-      );
+      ).toEqual('Cannot parse privateKey: Unsupported key format');
     }).then(() => {
-      assert.equal(LoginFormStore.getState().connecting, false);
+      expect(LoginFormStore.getState().connecting).toEqual(false);
     });
   });
 });

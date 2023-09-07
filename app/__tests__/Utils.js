@@ -1,63 +1,55 @@
-import chai, { assert } from 'chai';
-import chaiAsPromised from 'chai-as-promised';
-
 import Utils from '../Utils';
-
-global.before(() => {
-  chai.should();
-  chai.use(chaiAsPromised);
-});
 
 describe('Utils', () => {
   it('capitalizeFirstLetter with all lowercase', () => {
-    assert.equal(Utils.capitalizeFirstLetter('utils'), 'Utils');
+    expect(Utils.capitalizeFirstLetter('utils')).toEqual('Utils');
   });
 
   it('capitalizeFirstLetter with all uppercase', () => {
-    assert.equal(Utils.capitalizeFirstLetter('UTILS'), 'UTILS');
+    expect(Utils.capitalizeFirstLetter('UTILS')).toEqual('UTILS');
   });
 
   it(
     'capitalizeFirstLetter with first letter uppercase and rest mixed case',
     () => {
-      assert.equal(Utils.capitalizeFirstLetter('UTilS'), 'UTilS');
+      expect(Utils.capitalizeFirstLetter('UTilS')).toEqual('UTilS');
     },
   );
 
   it('findSecondsAgo', () => {
     const ftime = new Date();
     setTimeout(() => {
-      assert.notStrictEqual(Utils.findSecondsAgo(ftime), 2);
+      expect(Utils.findSecondsAgo(ftime)).toEqual('2.0');
     }, 2000);
   });
 
   it('getRandomColour', () => {
     const validColours = ['red', 'orange', 'yellow', 'olive', 'green', 'teal', 'blue',
       'violet', 'purple', 'pink', 'brown', 'grey', 'black'];
-    assert.include(validColours, Utils.getRandomColour());
+    expect(validColours).toContain(Utils.getRandomColour());
   });
 
   it('humanMemorySize with 0 size', () => {
-    assert.equal(Utils.humanMemorySize(0), '0 B');
+    expect(Utils.humanMemorySize(0)).toEqual('0 B');
   });
 
   it('humanMemorySize with byte size', () => {
-    assert.equal(Utils.humanMemorySize(500), '500 B');
+    expect(Utils.humanMemorySize(500)).toEqual('500 B');
   });
 
   it('humanMemorySize with kB size', () => {
-    assert.equal(Utils.humanMemorySize(2040), '1.99 kB');
+    expect(Utils.humanMemorySize(2040)).toEqual('1.99 kB');
   });
 
   it('humanMemorySize with MB size', () => {
-    assert.equal(Utils.humanMemorySize(536870912), '512 MB');
+    expect(Utils.humanMemorySize(536870912)).toEqual('512 MB');
   });
 
   it('humanMemorySize with GB size', () => {
-    assert.equal(Utils.humanMemorySize(2147483648), '2 GB');
+    expect(Utils.humanMemorySize(2147483648)).toEqual('2 GB');
   });
 
   it('humanMemorySize with TB size', () => {
-    assert.equal(Utils.humanMemorySize(1099511627776), '1 TB');
+    expect(Utils.humanMemorySize(1099511627776)).toEqual('1 TB');
   });
 });

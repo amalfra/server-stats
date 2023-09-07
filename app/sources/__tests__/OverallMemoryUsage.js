@@ -1,22 +1,13 @@
-import { expect } from 'chai';
-import { stub } from 'sinon';
-
 import OverallMemoryUsageSource from '../OverallMemoryUsage';
 import SSHConnection from '../../lib/SSHConnection';
 
 describe('OverallMemoryUsage', () => {
-  let fakeExec = null;
+  it('fetch returning error', async () => {
+    SSHConnection.exec = jest.fn().mockRejectedValue(new Error('SSH error'));
 
-  afterEach(() => {
-    fakeExec.restore();
-  });
-
-  it('fetch returning error', () => {
-    fakeExec = stub(SSHConnection, 'exec')
-      .rejects(new Error('SSH error'));
-    const returnVal = OverallMemoryUsageSource.fetch();
-
-    return expect(returnVal).to.be.rejectedWith('SSH error');
+    await expect(
+      OverallMemoryUsageSource.fetch(),
+    ).rejects.toThrow('SSH error');
   });
 
   it('fetch returning result old format', () => {
@@ -37,10 +28,10 @@ describe('OverallMemoryUsage', () => {
         free: 16288,
       },
     };
-    fakeExec = stub(SSHConnection, 'exec').resolves(fakeMetric);
+    SSHConnection.exec = jest.fn(() => Promise.resolve(fakeMetric));
     const returnVal = OverallMemoryUsageSource.fetch();
 
-    return expect(returnVal).to.eventually.deep.equal(fakeMetricProcessed);
+    return expect(returnVal).resolves.toEqual(fakeMetricProcessed);
   });
 
   it('fetch returning result new format', () => {
@@ -60,9 +51,9 @@ describe('OverallMemoryUsage', () => {
         free: 16288,
       },
     };
-    fakeExec = stub(SSHConnection, 'exec').resolves(fakeMetric);
+    SSHConnection.exec = jest.fn(() => Promise.resolve(fakeMetric));
     const returnVal = OverallMemoryUsageSource.fetch();
 
-    return expect(returnVal).to.eventually.deep.equal(fakeMetricProcessed);
+    return expect(returnVal).resolves.toEqual(fakeMetricProcessed);
   });
 });

@@ -26,3 +26,5 @@ jobs:
       - run: npm ci
       - run: npm test
       - run: npm run test:e2e
+      - name: Coveralls
+        uses: coverallsapp/github-action@master
