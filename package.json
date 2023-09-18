@@ -80,7 +80,7 @@
     "babel-loader": "^8.2.3",
     "copy-webpack-plugin": "^10.2.0",
     "css-loader": "^6.5.1",
-    "electron": "^22.3.21",
+    "electron": "^22.3.24",
     "electron-builder": "^24.2.1",
     "enzyme": "^3.11.0",
     "eslint": "^8.5.0",
