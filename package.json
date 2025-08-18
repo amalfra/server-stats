@@ -5,7 +5,7 @@
   "description": "A desktop application to view Linux server stats using SSH",
   "license": "MIT",
   "engines": {
-    "npm": ">=11.3.0",
+    "npm": ">=10.0",
     "node": ">=23.6.0"
   },
   "repository": {
