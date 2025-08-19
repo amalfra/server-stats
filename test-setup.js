@@ -19,5 +19,7 @@ beforeEach(() => {
   }
 
   window.electronAPI.execSSH = jest.fn();
-  jest.spyOn(window.electronAPI, 'execSSH').mockImplementation(() => Promise.resolve());
+  window.electronAPI.startSSH = jest.fn();
+  jest.spyOn(window.electronAPI, 'execSSH');
+  jest.spyOn(window.electronAPI, 'startSSH');
 });

@@ -24,20 +24,18 @@ class LoginForm {
     this.setConnectError(null);
     this.setConnecting(true);
 
-    return new Promise((resolve, reject) => {
-      window.electronAPI.startSSH({
-        host,
-        user,
-        key,
-        passphrase,
+    return window.electronAPI.startSSH({
+      host,
+      user,
+      key,
+      passphrase,
+    })
+      .then((resp) => resp)
+      .catch((err) => {
+        this.setConnectError(err.message);
+        throw err;
       })
-        .then((resp) => resolve(resp))
-        .catch((err) => {
-          this.setConnectError(err.message);
-          return reject();
-        })
-        .then(() => this.setConnecting(false));
-    });
+      .finally(() => this.setConnecting(false));
   }
 }
 
