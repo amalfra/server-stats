@@ -1,5 +1,5 @@
 const config = {
-  testEnvironment: 'jsdom',
+  preset: 'jest-playwright-preset',
   setupFilesAfterEnv: ['<rootDir>/test-setup.js'],
 };
 

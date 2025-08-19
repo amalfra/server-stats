@@ -1,3 +1,6 @@
+/**
+ * @jest-environment jsdom
+ */
 import alt from '../../lib/alt';
 import AppStore from '../App';
 import AppActions from '../../actions/App';

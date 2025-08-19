@@ -1,3 +1,6 @@
+/**
+ * @jest-environment jsdom
+ */
 import alt from '../../lib/alt';
 import LoginFormStore from '../LoginForm';
 import LoginFormActions from '../../actions/LoginForm';

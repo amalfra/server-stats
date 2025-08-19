@@ -1,9 +1,11 @@
+/**
+ * @jest-environment jsdom
+ */
 import OverallMemoryUsageSource from '../OverallMemoryUsage';
-import SSHConnection from '../../../lib/SSHConnection';
 
 describe('OverallMemoryUsage', () => {
   it('fetch returning error', async () => {
-    SSHConnection.exec = jest.fn().mockRejectedValue(new Error('SSH error'));
+    window.electronAPI.execSSH.mockRejectedValue(new Error('SSH error'));
 
     await expect(
       OverallMemoryUsageSource.fetch(),
@@ -28,7 +30,7 @@ describe('OverallMemoryUsage', () => {
         free: 16288,
       },
     };
-    SSHConnection.exec = jest.fn(() => Promise.resolve(fakeMetric));
+    window.electronAPI.execSSH.mockResolvedValue(fakeMetric);
     const returnVal = OverallMemoryUsageSource.fetch();
 
     return expect(returnVal).resolves.toEqual(fakeMetricProcessed);
@@ -51,7 +53,7 @@ describe('OverallMemoryUsage', () => {
         free: 16288,
       },
     };
-    SSHConnection.exec = jest.fn(() => Promise.resolve(fakeMetric));
+    window.electronAPI.execSSH.mockResolvedValue(fakeMetric);
     const returnVal = OverallMemoryUsageSource.fetch();
 
     return expect(returnVal).resolves.toEqual(fakeMetricProcessed);
