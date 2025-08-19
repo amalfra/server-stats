@@ -29,7 +29,7 @@ Install and connect to your server with SSH credentials through login screen.
 
 Questions, problems or suggestions? Please post them on the [issue tracker](https://github.com/amalfra/server-stats/issues).
 
-You can contribute changes by forking the project and submitting a pull request. You can ensure the tests are passing by running ```npm test && npm run test:e2e```. Feel free to contribute :heart_eyes:
+You can contribute changes by forking the project and submitting a pull request. You can ensure the tests are passing by running ```npm test```. Feel free to contribute :heart_eyes:
 
 ## UNDER MIT LICENSE
 

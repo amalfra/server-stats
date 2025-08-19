@@ -120,7 +120,6 @@
     "fix:lint": "npm run pretest -- --fix",
     "pretest": "eslint --ext .jsx --ext .js --ignore-path .gitignore .",
     "test": "npm run compile:dev && NODE_OPTIONS=--experimental-vm-modules jest --coverage app/**/__tests__/*.js",
-    "test:e2e": "npm run compile:dev && NODE_OPTIONS=--experimental-vm-modules jest --coverage __tests__/index.js",
     "build:linux": "npm run compile:prod && electron-builder --linux --x64",
     "build:osx": "npm run compile:prod && electron-builder --mac --x64",
     "build:win": "npm run compile:prod && electron-builder --win --x64"
