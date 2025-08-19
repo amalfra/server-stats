@@ -1,6 +1,6 @@
 {
   "name": "server-stats",
-  "version": "2.4.0",
+  "version": "3.0.0",
   "author": "Amal Francis <amalfra@gmail.com>",
   "description": "A desktop application to view Linux server stats using SSH",
   "license": "MIT",
