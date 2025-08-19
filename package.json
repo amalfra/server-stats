@@ -66,7 +66,9 @@
     "files": [
       "build/*",
       "resources/*",
-      "main.js"
+      "main.js",
+      "lib/**/*",
+      "preload.js"
     ]
   },
   "devDependencies": {
