@@ -1,5 +1,5 @@
 import CpuUsageSource from '../CpuUsage';
-import SSHConnection from '../../lib/SSHConnection';
+import SSHConnection from '../../../lib/SSHConnection';
 
 describe('CpuUsageSource', () => {
   it('fetch returning error', async () => {

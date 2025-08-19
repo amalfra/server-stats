@@ -1,5 +1,5 @@
 import OverallMemoryUsageSource from '../OverallMemoryUsage';
-import SSHConnection from '../../lib/SSHConnection';
+import SSHConnection from '../../../lib/SSHConnection';
 
 describe('OverallMemoryUsage', () => {
   it('fetch returning error', async () => {

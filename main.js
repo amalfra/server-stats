@@ -3,10 +3,21 @@ const {
 } = require('electron');
 const path = require('path');
 const url = require('url');
+const fs = require('fs');
+
+const { SSHConnection } = require('./lib/SSHConnection');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected
 let win;
+
+async function handleFileOpen() {
+  const { canceled, filePaths } = await dialog.showOpenDialog();
+  if (!canceled) {
+    return filePaths[0];
+  }
+  return null;
+}
 
 function createWindow() {
   // Create the browser window
@@ -16,9 +27,10 @@ function createWindow() {
     minWidth: 1024,
     minHeight: 768,
     webPreferences: {
-      nodeIntegration: true,
-      contextIsolation: false,
+      nodeIntegration: false,
+      contextIsolation: true,
       enableRemoteModule: true,
+      preload: path.join(__dirname, 'preload.js'),
     },
   });
 
@@ -35,6 +47,12 @@ function createWindow() {
     // delete the corresponding element
     win = null;
   });
+
+  ipcMain.handle('start-ssh', async (event, sshConfig) => SSHConnection
+    .establish(sshConfig.host, sshConfig.user, sshConfig.key, sshConfig.passphrase));
+  ipcMain.handle('execute-ssh', async (event, cmd) => SSHConnection.exec(cmd));
+  ipcMain.handle('dialog:openFile', handleFileOpen);
+  ipcMain.handle('readFile', async (event, file) => fs.readFileSync(file, 'utf8'));
 }
 
 ipcMain.handle('open-file', async () => {

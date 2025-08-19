@@ -1,7 +1,5 @@
 import alt from '../lib/alt';
 
-import SSHConnection from '../lib/SSHConnection';
-
 class LoginForm {
   constructor() {
     this.generateActions(
@@ -27,8 +25,14 @@ class LoginForm {
     this.setConnecting(true);
 
     return new Promise((resolve, reject) => {
-      SSHConnection.establish(host, user, key, passphrase)
-        .then((resp) => resolve(resp), (err) => {
+      window.electronAPI.startSSH({
+        host,
+        user,
+        key,
+        passphrase,
+      })
+        .then((resp) => resolve(resp))
+        .catch((err) => {
           this.setConnectError(err.message);
           return reject();
         })

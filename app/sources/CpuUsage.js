@@ -1,5 +1,3 @@
-import SSHConnection from '../lib/SSHConnection';
-
 const CpuUsage = {
   fetch() {
     return new Promise((resolve, reject) => {
@@ -25,14 +23,15 @@ const CpuUsage = {
         Total CPU usage time since boot = Total CPU time since boot - Total CPU Idle time since boot
         Total CPU percentage = (Total CPU usage time since boot/Total CPU time since boot) * 100
       */
-      SSHConnection.exec('cat /proc/stat | grep "^cpu" | '
+      window.electronAPI.execSSH('cat /proc/stat | grep "^cpu" | '
         + 'sed "s/cpu//g"')
         .then((cmdStdout) => {
           const cpuUsages = cmdStdout.split('\n');
           // first line combined metrics of all cpus which we are not interested in
           cpuUsages.shift();
           return resolve(cpuUsages);
-        }, (cmdStderr) => reject(cmdStderr));
+        })
+        .catch((cmdStderr) => reject(cmdStderr));
     });
   },
 };

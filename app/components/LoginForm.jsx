@@ -3,8 +3,6 @@ import { func } from 'prop-types';
 import {
   Button, Form, Input, Icon, Grid, Header, Segment, Message,
 } from 'semantic-ui-react';
-import { ipcRenderer } from 'electron';
-import fs from 'fs';
 
 import LoginFormStore from '../stores/LoginForm';
 import LoginFormAction from '../actions/LoginForm';
@@ -55,13 +53,16 @@ class LoginForm extends React.Component {
     const { onLoginSuccess } = this.props;
 
     e.preventDefault();
-    LoginFormAction.connectToServer(
-      remoteHost,
-      sshUsername,
-      fs.readFileSync(sshKey),
-      passphrase,
-    )
-      .then(onLoginSuccess, () => {});
+    window.electronAPI.readFile(sshKey)
+      .then((result) => {
+        LoginFormAction.connectToServer(
+          remoteHost,
+          sshUsername,
+          result,
+          passphrase,
+        )
+          .then(onLoginSuccess, () => {});
+      });
   }
 
   handleFilepicker(e) {
@@ -71,15 +72,14 @@ class LoginForm extends React.Component {
       return;
     }
     this.pickingFile = true;
-    ipcRenderer.invoke('open-file')
+    window.electronAPI.openFile()
       .then((result) => {
         this.pickingFile = false;
 
-        // fileNames is an array that contains all selected files
-        if (!result.filePaths) {
+        if (!result) {
           return;
         }
-        handleInputChange(null, 'sshKey', result.filePaths[0]);
+        handleInputChange(null, 'sshKey', result);
       }).catch(() => {
         this.pickingFile = false;
       });

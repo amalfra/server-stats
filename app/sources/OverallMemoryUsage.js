@@ -1,5 +1,3 @@
-import SSHConnection from '../lib/SSHConnection';
-
 const OverallMemoryUsage = {
   fetch() {
     return new Promise((resolve, reject) => {
@@ -41,7 +39,7 @@ const OverallMemoryUsage = {
 
         Reference: http:www.software-architect.net/blog/article/date/2015/06/12/-826c6e5052.html
       */
-      SSHConnection.exec('free -b | grep -E "Mem|Swap"')
+      window.electronAPI.execSSH('free -b | grep -E "Mem|Swap"')
         .then((cmdStdout) => {
           const formattedOutput = {
             mem: {
@@ -104,7 +102,8 @@ const OverallMemoryUsage = {
             formattedOutput[memoryUsageParts[0]] = readings;
           }
           return resolve(formattedOutput);
-        }, (cmdStderr) => reject(cmdStderr));
+        })
+        .catch((cmdStderr) => reject(cmdStderr));
     });
   },
 };

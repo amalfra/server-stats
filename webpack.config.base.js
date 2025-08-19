@@ -1,8 +1,28 @@
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
-module.exports = {
+const mainConfig = {
   target: 'electron-main',
+  entry: './main.js',
+  output: {
+    filename: 'main.bundle.js',
+    path: `${__dirname}/build`,
+  },
+  node: {
+    __dirname: false,
+    __filename: false,
+  },
+  externalsPresets: { node: true },
+  resolve: {
+    extensions: ['.js'],
+  },
+  externals: {
+    ssh2: 'commonjs ssh2',
+  },
+};
+
+const rendererConfig = {
+  target: 'web',
   entry: './app/index',
   module: {
     rules: [
@@ -43,3 +63,5 @@ module.exports = {
     extensions: ['.js', '.jsx'],
   },
 };
+
+module.exports = [mainConfig, rendererConfig];
