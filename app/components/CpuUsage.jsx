@@ -107,7 +107,6 @@ const CpuUsage = function () {
           // fetch usage for next cycle
           setTimeout(getCpuUsagePoller, 1500);
         }, (err) => {
-          // eslint-disable-next-line no-console
           console.error(err);
           // don't fail, trigger next cycle, keep trying
           setTimeout(getCpuUsagePoller, 1500);

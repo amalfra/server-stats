@@ -102,7 +102,6 @@ const OverallMemoryUsage = function () {
           // fetch usage for next cycle
           setTimeout(getOverallMemoryUsagePoller, 1500);
         }, (err) => {
-          // eslint-disable-next-line no-console
           console.error(err);
           // don't fail, trigger next cycle, keep trying
           setTimeout(getOverallMemoryUsagePoller, 1500);
