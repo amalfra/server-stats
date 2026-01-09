@@ -1,6 +1,6 @@
-import alt from '../lib/alt';
+import alt from '../lib/alt.js';
 
-import AppActions from '../actions/App';
+import AppActions from '../actions/App.js';
 
 class App {
   constructor() {

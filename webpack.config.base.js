@@ -1,7 +1,12 @@
-const CopyWebpackPlugin = require('copy-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+import path from 'path';
+import { fileURLToPath } from 'url';
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+import CopyWebpackPlugin from 'copy-webpack-plugin';
 
-const mainConfig = {
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+export const mainConfig = {
   target: 'electron-main',
   entry: './main.js',
   output: {
@@ -21,14 +26,14 @@ const mainConfig = {
   },
 };
 
-const rendererConfig = {
+export const rendererConfig = {
   target: 'web',
-  entry: './app/index',
+  entry: './app/index.jsx',
   module: {
     rules: [
       {
         test: /\.jsx?$/,
-        exclude: /(node_modules)/,
+        exclude: /node_modules|__tests__|jest\.config\.js/,
         loader: 'babel-loader',
       },
       {
@@ -63,5 +68,3 @@ const rendererConfig = {
     extensions: ['.js', '.jsx'],
   },
 };
-
-module.exports = [mainConfig, rendererConfig];

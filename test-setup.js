@@ -1,9 +1,10 @@
-import { configure } from 'enzyme';
+import Enzyme from 'enzyme';
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
+import { jest } from '@jest/globals';
 
-configure({ adapter: new Adapter() });
+Enzyme.configure({ adapter: new Adapter() });
 
-jest.mock('electron', () => ({
+jest.unstable_mockModule('electron', () => ({
   ipcRenderer: {
     on: jest.fn(),
     send: jest.fn(),

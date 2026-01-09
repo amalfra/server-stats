@@ -1,11 +1,15 @@
-const {
+import path from 'path';
+import { fileURLToPath } from 'url';
+import url from 'url';
+import fs from 'fs';
+import {
   app, BrowserWindow, ipcMain, dialog,
-} = require('electron');
-const path = require('path');
-const url = require('url');
-const fs = require('fs');
+} from 'electron';
 
-const { SSHConnection } = require('./lib/SSHConnection');
+import SSHConnection from './lib/SSHConnection.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected

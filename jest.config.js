@@ -1,6 +1,4 @@
-const config = {
+export default {
   testEnvironment: 'jsdom',
   setupFilesAfterEnv: ['<rootDir>/test-setup.js'],
 };
-
-module.exports = config;

@@ -1,6 +1,12 @@
-const config = require('./webpack.config.base');
+import { merge } from 'webpack-merge';
 
-config[0].mode = 'development';
-config[1].mode = 'development';
+import { mainConfig, rendererConfig } from './webpack.config.base.js';
 
-module.exports = config;
+const newMainConfig = merge(mainConfig, {
+  mode: 'development',
+});
+const newRendererConfig = merge(rendererConfig, {
+  mode: 'development',
+});
+
+export default [newMainConfig, newRendererConfig];

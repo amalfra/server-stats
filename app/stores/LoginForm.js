@@ -1,6 +1,6 @@
-import alt from '../lib/alt';
+import alt from '../lib/alt.js';
 
-import LoginFormActions from '../actions/LoginForm';
+import LoginFormActions from '../actions/LoginForm.js';
 
 class LoginForm {
   constructor() {
