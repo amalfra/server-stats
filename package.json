@@ -27,6 +27,7 @@
   "main": "main.js",
   "type": "module",
   "build": {
+    "npmRebuild": false,
     "appId": "com.amalfra.server-stats",
     "mac": {
       "category": "public.app-category.developer-tools"
