@@ -151,6 +151,7 @@ class LoginForm extends React.Component {
                   className="hand-cursor"
                   onClick={this.handleFilepicker}
                   onFocus={this.handleFilepicker}
+                  onChange={() => null}
                 />
                 <TextInput
                   name="passphrase"
