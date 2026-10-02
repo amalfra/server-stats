@@ -1,8 +1,9 @@
 import React from 'react';
 import { func } from 'prop-types';
 import {
-  Button, Form, Input, Icon, Grid, Header, Segment, Message,
-} from 'semantic-ui-react';
+  Alert, Button, Center, Paper, Stack, TextInput, Title,
+} from '@mantine/core';
+import { IconFile } from '@tabler/icons-react';
 
 import LoginFormStore from '../stores/LoginForm';
 import LoginFormAction from '../actions/LoginForm';
@@ -110,80 +111,70 @@ class LoginForm extends React.Component {
 
     return (
       <section className="login-form">
-        <Grid
-          textAlign="center"
-          style={{ height: '100%' }}
-          verticalAlign="middle"
-        >
-          <Grid.Column style={{ maxWidth: 450 }}>
+        <Center h="100%" p="md">
+          <Paper w="100%" maw={450} p="lg" shadow="sm" withBorder>
             {connectError
               && (
-              <Message negative>
-                <Message.Header>That didn&apos;t work</Message.Header>
-                <p>{connectError}</p>
-              </Message>
+              <Alert color="red" title="That didn&apos;t work" mb="md">
+                {connectError}
+              </Alert>
               )}
-            <Header as="h2" color="teal" textAlign="center">
+            <Title order={2} c="teal" ta="center" mb="lg">
               Connect to your server
-            </Header>
-            <Form size="large" onSubmit={this.handleFormSubmit}>
-              <Segment stacked>
-                <Form.Input
-                  fluid
+            </Title>
+            <form onSubmit={this.handleFormSubmit}>
+              <Stack gap="md">
+                <TextInput
                   name="remoteHost"
                   placeholder="Remote host"
                   readOnly={connecting}
-                  error={remoteHostDirty && remoteHostErrorStatus}
+                  error={remoteHostDirty && remoteHostErrorStatus ? 'Remote host is required' : null}
                   value={remoteHost}
                   onChange={handleInputChange}
                 />
-                <Form.Input
-                  fluid
+                <TextInput
                   name="sshUsername"
                   placeholder="SSH username"
                   readOnly={connecting}
-                  error={sshUsernameDirty && sshUsernameErrorStatus}
+                  error={sshUsernameDirty && sshUsernameErrorStatus ? 'SSH username is required' : null}
                   value={sshUsername}
                   onChange={handleInputChange}
                 />
-                <Form.Field>
-                  <Input
-                    fluid
-                    icon
-                    name="sshKey"
-                    placeholder="SSH key file"
-                    readOnly={connecting}
-                    error={sshKeyDirty && sshKeyErrorStatus}
-                    value={sshKey}
-                    onClick={this.handleFilepicker}
-                    onFocus={this.handleFilepicker}
-                  >
-                    <input className="hand-cursor" />
-                    <Icon name="file" />
-                  </Input>
-                </Form.Field>
-                <Form.Input
-                  fluid
+                <TextInput
+                  name="sshKey"
+                  placeholder="SSH key file"
+                  readOnly={connecting}
+                  error={sshKeyDirty && sshKeyErrorStatus ? 'SSH key file is required' : null}
+                  value={sshKey}
+                  rightSection={<IconFile size={16} />}
+                  rightSectionPointerEvents="none"
+                  className="hand-cursor"
+                  onClick={this.handleFilepicker}
+                  onFocus={this.handleFilepicker}
+                  onChange={() => null}
+                />
+                <TextInput
                   name="passphrase"
                   placeholder="SSH key passphrase (optional)"
                   readOnly={connecting}
-                  error={passphraseDirty && passphraseErrorStatus}
+                  error={passphraseDirty && passphraseErrorStatus ? 'Invalid passphrase' : null}
                   value={passphrase}
                   onChange={handleInputChange}
                 />
                 <Button
-                  fluid
+                  type="submit"
+                  fullWidth
                   disabled={!isFormValid}
                   loading={connecting}
                   color="teal"
-                  size="large"
+                  size="md"
                 >
                   Connect
                 </Button>
-              </Segment>
-            </Form>
-          </Grid.Column>
-        </Grid>
+              </Stack>
+            </form>
+          </Paper>
+        </Center>
       </section>
     );
   }

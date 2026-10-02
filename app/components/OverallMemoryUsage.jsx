@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   AreaChart, Area, CartesianGrid, XAxis, YAxis, ResponsiveContainer,
   Tooltip,
 } from 'recharts';
 import {
-  Label, Grid, Header, Divider,
-} from 'semantic-ui-react';
+  Divider, Grid, Group, Stack, Text, Title,
+} from '@mantine/core';
 
 import MemoryUsageComponent from './MemoryUsage';
 import SwapUsageComponent from './SwapUsage';
@@ -14,13 +14,6 @@ import Utils from '../Utils';
 
 const METRIC_MEMORY_LIMIT = 5;
 
-let lastUpdated = 0;
-/*
-  is an array which holds the time at which each metric was fetched
-  eg: [<Date object>, <Date object>, <Date object>, <Date object>, <Date object>]
-  initialize with zero
-*/
-let metricFetchTimes = new Array(METRIC_MEMORY_LIMIT).fill(0);
 const memoryColours = {
   mem: Utils.getRandomColour(),
   swap: Utils.getRandomColour(),
@@ -28,52 +21,26 @@ const memoryColours = {
 
 const OverallMemoryUsage = function () {
   const [updatedAgo, setUpdatedAgo] = useState(0);
-  const [overallMemoryUsageData, setOverallMemoryUsageData] = useState(new Array(METRIC_MEMORY_LIMIT).fill({}));
+  const [overallMemoryUsageData, setOverallMemoryUsageData] = useState([]);
   const [memoryTotal, setMemoryTotal] = useState(0);
   const [memoryUsed, setMemoryUsed] = useState(0);
   const [swapTotal, setSwapTotal] = useState(0);
   const [swapUsed, setSwapUsed] = useState(0);
+  const lastUpdated = useRef(null);
 
   useEffect(() => {
     const plotChart = (usages) => {
-      let newOverallMemoryUsageData = overallMemoryUsageData;
-
-      // calculate metric fetched ago to display as x axis labels
-      for (let i = 0; i < metricFetchTimes.length; i += 1) {
-        const datasetTemplate = {
-          time: '0s ago',
-        };
-
-        Object.keys(usages).forEach((memType) => {
-          datasetTemplate[memType] = usages[memType];
-        });
-
-        // calculate metric fetched ago to display as x axis labels
-        if (metricFetchTimes[i] !== 0) {
-          datasetTemplate.time = `${Utils.findSecondsAgo(metricFetchTimes[i])}s ago`;
-        }
-
-        newOverallMemoryUsageData.push(datasetTemplate);
-      }
-
-      // the chart will show only the latest n metrics
-      const start = newOverallMemoryUsageData.length - METRIC_MEMORY_LIMIT;
-      const end = newOverallMemoryUsageData.length;
-      newOverallMemoryUsageData = newOverallMemoryUsageData.splice(start, end);
-
-      setOverallMemoryUsageData(newOverallMemoryUsageData);
+      setOverallMemoryUsageData((currentData) => [
+        ...currentData.slice(-(METRIC_MEMORY_LIMIT - 1)),
+        { fetchedAt: new Date(), ...usages },
+      ]);
     };
 
     const getOverallMemoryUsagePoller = () => {
       OverallMemoryUsageSources.fetch()
         .then((usages) => {
           const newUsages = usages;
-          lastUpdated = new Date();
-          metricFetchTimes.push(lastUpdated);
-          // the chart will show only the latest n metrics, hence there should only be n labels
-          const start = metricFetchTimes.length - METRIC_MEMORY_LIMIT;
-          const end = metricFetchTimes.length;
-          metricFetchTimes = metricFetchTimes.splice(start, end);
+          lastUpdated.current = new Date();
 
           setMemoryTotal(newUsages.mem.total);
           setMemoryUsed(newUsages.mem.used);
@@ -110,8 +77,8 @@ const OverallMemoryUsage = function () {
 
     const sinceTimeUpdater = () => {
       // calcuate updated since if we had a previous update
-      if (lastUpdated) {
-        setUpdatedAgo(Utils.findSecondsAgo(lastUpdated));
+      if (lastUpdated.current) {
+        setUpdatedAgo(Utils.findSecondsAgo(lastUpdated.current));
       }
 
       setTimeout(sinceTimeUpdater, 1000);
@@ -125,11 +92,15 @@ const OverallMemoryUsage = function () {
 
   return (
     <article id="overall-memory-usage">
-      <Grid container>
-        <Grid.Row>
-          <Grid.Column width={12}>
+      <Grid gutter="xl" align="center">
+        <Grid.Col span={{ base: 12, md: 9 }}>
             <ResponsiveContainer width="100%" height={400}>
-              <AreaChart data={overallMemoryUsageData}>
+              <AreaChart
+                data={overallMemoryUsageData.map(({ fetchedAt, ...usage }) => ({
+                  ...usage,
+                  time: `${Utils.findSecondsAgo(fetchedAt)}s ago`,
+                }))}
+              >
                 <defs>
                   <linearGradient id="colourMemory" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor={memoryColours.mem} stopOpacity={0.8} />
@@ -166,45 +137,34 @@ const OverallMemoryUsage = function () {
                 />
               </AreaChart>
             </ResponsiveContainer>
-          </Grid.Column>
-          <Grid.Column width={4}>
-            <Grid.Row>
-              <Grid.Column>
-                <Header as="h4">
-                  Memory
-                </Header>
-                <MemoryUsageComponent
-                  memoryTotal={memoryTotal}
-                  memoryUsed={memoryUsed}
-                  memoryColour={memoryColours.mem}
-                />
-              </Grid.Column>
-            </Grid.Row>
-            <Grid.Row>
-              <Grid.Column>
-                <br />
-                <br />
-                <Divider />
-                <br />
-              </Grid.Column>
-            </Grid.Row>
-            <Grid.Row>
-              <Grid.Column>
-                <Header as="h4">
-                  Swap
-                </Header>
-                <SwapUsageComponent swapTotal={swapTotal} swapUsed={swapUsed} memoryColour={memoryColours.swap} />
-              </Grid.Column>
-            </Grid.Row>
-          </Grid.Column>
-        </Grid.Row>
+        </Grid.Col>
+        <Grid.Col span={{ base: 12, md: 3 }}>
+          <Stack gap="md">
+            <div>
+              <Title order={4} mb="xs">Memory</Title>
+              <MemoryUsageComponent
+                memoryTotal={memoryTotal}
+                memoryUsed={memoryUsed}
+                memoryColour={memoryColours.mem}
+              />
+            </div>
+            <Divider />
+            <div>
+              <Title order={4} mb="xs">Swap</Title>
+              <SwapUsageComponent
+                swapTotal={swapTotal}
+                swapUsed={swapUsed}
+                memoryColour={memoryColours.swap}
+              />
+            </div>
+          </Stack>
+        </Grid.Col>
       </Grid>
-      <Label className="pull-right">
-        Last updated:
-        {' '}
-        {updatedAgo ? `${updatedAgo} seconds ago` : 'not yet'}
-      </Label>
-      <br className="clearfix" />
+      <Group justify="flex-end" mt="sm">
+        <Text size="sm" c="dimmed">
+          Last updated: {updatedAgo ? `${updatedAgo} seconds ago` : 'not yet'}
+        </Text>
+      </Group>
     </article>
   );
 };

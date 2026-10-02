@@ -1,10 +1,16 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
+import { MantineProvider } from '@mantine/core';
 
 import Router from './router';
 
+import '@mantine/core/styles.css';
 import './app.css';
 
 window.onload = () => {
-  ReactDOM.render(<Router />, document.getElementById('app'));
+  createRoot(document.getElementById('app')).render(
+    <MantineProvider>
+      <Router />
+    </MantineProvider>,
+  );
 };

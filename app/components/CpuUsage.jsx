@@ -1,74 +1,48 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   AreaChart, Area, CartesianGrid, XAxis, YAxis, ResponsiveContainer,
   Tooltip,
 } from 'recharts';
-import { Label } from 'semantic-ui-react';
+import { Group, Text } from '@mantine/core';
 
 import CpuUsageSources from '../sources/CpuUsage';
 import Utils from '../Utils';
 
 const METRIC_MEMORY_LIMIT = 5;
 
-// will hold values calculated in last cycle to find diff aganist
-const previousCpuUsageTotal = [];
-const previousCpuUsageIdle = [];
-let lastUpdated = 0;
-/*
-  is an array which holds the time at which each metric was fetched
-  eg: [<Date object>, <Date object>, <Date object>, <Date object>, <Date object>]
-  initialize with zero
-*/
-let metricFetchTimes = new Array(METRIC_MEMORY_LIMIT).fill(0);
 const cpuColours = [];
 
 const CpuUsage = function () {
   const [updatedAgo, setUpdatedAgo] = useState(0);
-  const [cpuUsageData, setCpuUsageData] = useState(new Array(METRIC_MEMORY_LIMIT).fill({}));
+  const [cpuUsageData, setCpuUsageData] = useState([]);
+  const previousCpuUsageTotal = useRef([]);
+  const previousCpuUsageIdle = useRef([]);
+  const lastUpdated = useRef(null);
 
   useEffect(() => {
     const plotChart = (usages) => {
-      let newCpuUsageData = cpuUsageData;
+      const datasetTemplate = { fetchedAt: new Date() };
 
-      // calculate metric fetched ago to display as x axis labels
-      for (let i = 0; i < metricFetchTimes.length; i += 1) {
-        const datasetTemplate = {
-          time: '0s ago',
-        };
-
-        for (let cpuNumber = 0; cpuNumber < usages.length; cpuNumber += 1) {
-          // assign a colour to this cpu if its not yet done
-          if (!cpuColours[cpuNumber]) {
-            cpuColours[cpuNumber] = Utils.getRandomColour();
-          }
-
-          datasetTemplate[`cpu${cpuNumber + 1}`] = 0;
-          if (metricFetchTimes[i] !== 0) {
-            datasetTemplate.time = `${Utils.findSecondsAgo(metricFetchTimes[i])}s ago`;
-            datasetTemplate[`cpu${cpuNumber + 1}`] = usages[cpuNumber];
-          }
+      for (let cpuNumber = 0; cpuNumber < usages.length; cpuNumber += 1) {
+        // assign a colour to this cpu if its not yet done
+        if (!cpuColours[cpuNumber]) {
+          cpuColours[cpuNumber] = Utils.getRandomColour();
         }
-        newCpuUsageData.push(datasetTemplate);
+
+        datasetTemplate[`cpu${cpuNumber + 1}`] = usages[cpuNumber];
       }
 
-      // the chart will show only the latest n metrics
-      const start = newCpuUsageData.length - METRIC_MEMORY_LIMIT;
-      const end = newCpuUsageData.length;
-      newCpuUsageData = newCpuUsageData.splice(start, end);
-
-      setCpuUsageData(newCpuUsageData);
+      setCpuUsageData((currentData) => [
+        ...currentData.slice(-(METRIC_MEMORY_LIMIT - 1)),
+        datasetTemplate,
+      ]);
     };
 
     const getCpuUsagePoller = () => {
       CpuUsageSources.fetch()
         .then((usages) => {
           const newUsages = usages;
-          lastUpdated = new Date();
-          metricFetchTimes.push(lastUpdated);
-          // the chart will show only the latest n metrics, hence there should only be n labels
-          const start = metricFetchTimes.length - METRIC_MEMORY_LIMIT;
-          const end = metricFetchTimes.length;
-          metricFetchTimes = metricFetchTimes.splice(start, end);
+          lastUpdated.current = new Date();
 
           // start calculating usage for each cpu and put result in usages
           for (let i = 0; i < newUsages.length; i += 1) {
@@ -81,15 +55,15 @@ const CpuUsage = function () {
             const idleTime = usageMetrics[4] + usageMetrics[5];
             // calculate the diff usage since we last checked
             const diffIdleTime = idleTime
-              - (previousCpuUsageIdle[i] || 0);
+              - (previousCpuUsageIdle.current[i] || 0);
             const diffTotalTime = totalTime
-              - (previousCpuUsageTotal[i] || 0);
+              - (previousCpuUsageTotal.current[i] || 0);
             const diffUsageTime = diffTotalTime - diffIdleTime;
             const diffUsagePercentage = (diffUsageTime / diffTotalTime) * 100;
             newUsages[i] = diffUsagePercentage.toFixed(2);
             // present will be the past in future :-P
-            previousCpuUsageTotal[i] = totalTime;
-            previousCpuUsageIdle[i] = idleTime;
+            previousCpuUsageTotal.current[i] = totalTime;
+            previousCpuUsageIdle.current[i] = idleTime;
           }
 
           /*
@@ -115,8 +89,8 @@ const CpuUsage = function () {
 
     const sinceTimeUpdater = () => {
       // calcuate updated since if we had a previous update
-      if (lastUpdated) {
-        setUpdatedAgo(Utils.findSecondsAgo(lastUpdated));
+      if (lastUpdated.current) {
+        setUpdatedAgo(Utils.findSecondsAgo(lastUpdated.current));
       }
 
       setTimeout(sinceTimeUpdater, 1000);
@@ -131,7 +105,12 @@ const CpuUsage = function () {
   return (
     <article id="cpu-usage">
       <ResponsiveContainer width="100%" height={400}>
-        <AreaChart data={cpuUsageData}>
+        <AreaChart
+          data={cpuUsageData.map(({ fetchedAt, ...usage }) => ({
+            ...usage,
+            time: `${Utils.findSecondsAgo(fetchedAt)}s ago`,
+          }))}
+        >
           <defs>
             {cpuColours.map((cpuColour, index) => (
               <linearGradient key={`cpu${index + 1}`} id={`color${`Cpu${index + 1}`}`} x1="0" y1="0" x2="0" y2="1">
@@ -162,12 +141,11 @@ const CpuUsage = function () {
         </AreaChart>
       </ResponsiveContainer>
       <br />
-      <Label className="pull-right">
-        Last updated:
-        {' '}
-        {updatedAgo ? `${updatedAgo} seconds ago` : 'not yet'}
-      </Label>
-      <br className="clearfix" />
+      <Group justify="flex-end" mt="sm">
+        <Text size="sm" c="dimmed">
+          Last updated: {updatedAgo ? `${updatedAgo} seconds ago` : 'not yet'}
+        </Text>
+      </Group>
     </article>
   );
 };

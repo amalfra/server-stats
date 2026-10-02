@@ -1,8 +1,5 @@
-import Enzyme from 'enzyme';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
+import '@testing-library/jest-dom';
 import { jest } from '@jest/globals';
-
-Enzyme.configure({ adapter: new Adapter() });
 
 jest.unstable_mockModule('electron', () => ({
   ipcRenderer: {

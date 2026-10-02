@@ -1,6 +1,6 @@
 import React from 'react';
 import { number, string } from 'prop-types';
-import { Progress } from 'semantic-ui-react';
+import { Progress, Stack, Text } from '@mantine/core';
 
 import Utils from '../Utils';
 
@@ -9,27 +9,20 @@ const SwapUsage = function ({ swapTotal, swapUsed, memoryColour }) {
     <article id="swap-usage">
       {swapTotal > 0
         ? (
-          <Progress
-            percent={(swapUsed / swapTotal)
-              .toFixed(2) * 100}
-            color={memoryColour}
-            size="small"
-            progress
-          >
+          <Stack gap={4}>
+            <Progress value={(swapUsed / swapTotal).toFixed(2) * 100} color={memoryColour} size="sm" />
+            <Text size="sm">
             {Utils.humanMemorySize(swapUsed)}
-&nbsp;of&nbsp;
+            {' of '}
             {Utils.humanMemorySize(swapTotal)}
-          </Progress>
+            </Text>
+          </Stack>
         )
         : (
-          <Progress
-            percent={0}
-            color={memoryColour}
-            size="small"
-            progress
-          >
-            0MB of 0MB
-          </Progress>
+          <Stack gap={4}>
+            <Progress value={0} color={memoryColour} size="sm" />
+            <Text size="sm">0MB of 0MB</Text>
+          </Stack>
         )}
     </article>
   );
