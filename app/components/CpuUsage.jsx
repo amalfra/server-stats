@@ -3,7 +3,7 @@ import {
   AreaChart, Area, CartesianGrid, XAxis, YAxis, ResponsiveContainer,
   Tooltip,
 } from 'recharts';
-import { Label } from 'semantic-ui-react';
+import { Group, Text } from '@mantine/core';
 
 import CpuUsageSources from '../sources/CpuUsage';
 import Utils from '../Utils';
@@ -162,12 +162,11 @@ const CpuUsage = function () {
         </AreaChart>
       </ResponsiveContainer>
       <br />
-      <Label className="pull-right">
-        Last updated:
-        {' '}
-        {updatedAgo ? `${updatedAgo} seconds ago` : 'not yet'}
-      </Label>
-      <br className="clearfix" />
+      <Group justify="flex-end" mt="sm">
+        <Text size="sm" c="dimmed">
+          Last updated: {updatedAgo ? `${updatedAgo} seconds ago` : 'not yet'}
+        </Text>
+      </Group>
     </article>
   );
 };

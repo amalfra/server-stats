@@ -4,8 +4,8 @@ import {
   Tooltip,
 } from 'recharts';
 import {
-  Label, Grid, Header, Divider,
-} from 'semantic-ui-react';
+  Divider, Grid, Group, Stack, Text, Title,
+} from '@mantine/core';
 
 import MemoryUsageComponent from './MemoryUsage';
 import SwapUsageComponent from './SwapUsage';
@@ -125,9 +125,8 @@ const OverallMemoryUsage = function () {
 
   return (
     <article id="overall-memory-usage">
-      <Grid container>
-        <Grid.Row>
-          <Grid.Column width={12}>
+      <Grid gutter="xl" align="center">
+        <Grid.Col span={{ base: 12, md: 9 }}>
             <ResponsiveContainer width="100%" height={400}>
               <AreaChart data={overallMemoryUsageData}>
                 <defs>
@@ -166,45 +165,34 @@ const OverallMemoryUsage = function () {
                 />
               </AreaChart>
             </ResponsiveContainer>
-          </Grid.Column>
-          <Grid.Column width={4}>
-            <Grid.Row>
-              <Grid.Column>
-                <Header as="h4">
-                  Memory
-                </Header>
-                <MemoryUsageComponent
-                  memoryTotal={memoryTotal}
-                  memoryUsed={memoryUsed}
-                  memoryColour={memoryColours.mem}
-                />
-              </Grid.Column>
-            </Grid.Row>
-            <Grid.Row>
-              <Grid.Column>
-                <br />
-                <br />
-                <Divider />
-                <br />
-              </Grid.Column>
-            </Grid.Row>
-            <Grid.Row>
-              <Grid.Column>
-                <Header as="h4">
-                  Swap
-                </Header>
-                <SwapUsageComponent swapTotal={swapTotal} swapUsed={swapUsed} memoryColour={memoryColours.swap} />
-              </Grid.Column>
-            </Grid.Row>
-          </Grid.Column>
-        </Grid.Row>
+        </Grid.Col>
+        <Grid.Col span={{ base: 12, md: 3 }}>
+          <Stack gap="md">
+            <div>
+              <Title order={4} mb="xs">Memory</Title>
+              <MemoryUsageComponent
+                memoryTotal={memoryTotal}
+                memoryUsed={memoryUsed}
+                memoryColour={memoryColours.mem}
+              />
+            </div>
+            <Divider />
+            <div>
+              <Title order={4} mb="xs">Swap</Title>
+              <SwapUsageComponent
+                swapTotal={swapTotal}
+                swapUsed={swapUsed}
+                memoryColour={memoryColours.swap}
+              />
+            </div>
+          </Stack>
+        </Grid.Col>
       </Grid>
-      <Label className="pull-right">
-        Last updated:
-        {' '}
-        {updatedAgo ? `${updatedAgo} seconds ago` : 'not yet'}
-      </Label>
-      <br className="clearfix" />
+      <Group justify="flex-end" mt="sm">
+        <Text size="sm" c="dimmed">
+          Last updated: {updatedAgo ? `${updatedAgo} seconds ago` : 'not yet'}
+        </Text>
+      </Group>
     </article>
   );
 };
